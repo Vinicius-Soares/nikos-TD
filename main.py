@@ -1,13 +1,10 @@
 import pygame as pg
-
-background_colour = (0,0,0)
-(width, height) = (800, 600)
+from utils import *
 
 pg.init()
-screen = pg.display.set_mode((width, height))
-pg.display.set_caption("Niko's Tower Defense")
-screen.fill(background_colour)
-pg.display.flip()
+pg.mixer.init()
+screen = pg.display.set_mode(MODE)
+pg.display.set_caption(TITLE)
 
 running = True
 
@@ -15,3 +12,6 @@ while running:
   for event in pg.event.get():
     if event.type == pg.QUIT:
       running = False
+
+  screen.fill(BLACK)
+  pg.display.flip()
