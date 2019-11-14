@@ -12,12 +12,28 @@ class Game():
   
   def new(self):
     self.all_sprites = pg.sprite.Group()
-    teste = pg.sprite.Sprite()
-    teste.image = pg.Surface((30, 30))
-    teste.image.fill(WHITE)
-    teste.rect = teste.image.get_rect()
-    teste.rect.center = (100, 100)
-    self.all_sprites.add(teste)
+    begin = pg.sprite.Sprite()
+    begin.image = pg.Surface((80, 100))
+    begin.image.fill(BEGIN_COLOR)
+    begin.rect = begin.image.get_rect()
+    begin.rect.center = (100, HEIGHT / 2)
+    self.all_sprites.add(begin)
+
+    for i in range(8):
+      path = pg.sprite.Sprite()
+      path.image = pg.Surface((100, 100))
+      path.image.fill(PATH_COLOR)
+      path.rect = path.image.get_rect()
+      path.rect.center = (190 + (i * 100), HEIGHT / 2)
+      self.all_sprites.add(path)
+
+    end = pg.sprite.Sprite()
+    end.image = pg.Surface((80, 100))
+    end.image.fill(END_COLOR)
+    end.rect = end.image.get_rect()
+    end.rect.center = (900, HEIGHT / 2)
+    self.all_sprites.add(end)
+
     self.run()
 
   def run(self):
