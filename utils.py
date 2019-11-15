@@ -1,7 +1,11 @@
+from pathlib import Path
+
+BASE_PATH = Path()
+FONT = BASE_PATH / 'assets' / 'fonts' / 'Pixeled.ttf'
+
 WIDTH = 1024
 HEIGHT = 768
 MODE = (WIDTH, HEIGHT)
-
 TITLE = "Niko's Tower Defense"
 
 BLACK = (0, 0, 0)
