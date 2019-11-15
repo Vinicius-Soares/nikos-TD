@@ -1,12 +1,5 @@
 import pygame as pg
-from utils import *
-
-
-def main():
-  g = Game()
-  while g.running:
-    g.new()
-
+from .utils import *
 
 class Game():
   def __init__(self):

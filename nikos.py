@@ -8,7 +8,7 @@
 
 import pygame as pg
 import sys
-from game import main
+from core.main import main
 
 
 if __name__ == '__main__':
