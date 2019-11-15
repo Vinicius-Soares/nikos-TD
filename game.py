@@ -1,7 +1,12 @@
 import pygame as pg
 from utils import *
 
-# Fonte Pixeled: https://www.dafont.com/pt/pixeled.font
+
+def main():
+  g = Game()
+  while g.running:
+    g.new()
+
 
 class Game():
   def __init__(self):
@@ -67,9 +72,3 @@ class Game():
     self.screen.fill(BLACK)
     self.all_sprites.draw(self.screen)
     pg.display.flip()
-
-print(BASE_PATH)
-print(FONT_PATH)
-g = Game()
-while g.running:
-  g.new()
