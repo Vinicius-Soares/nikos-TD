@@ -1,6 +1,8 @@
 import pygame as pg
 from utils import *
+
 class Game():
+
   def __init__(self):
     pg.init()
     pg.mixer.init()
@@ -13,7 +15,7 @@ class Game():
   def new(self):
     self.all_sprites = pg.sprite.Group()
     begin = pg.sprite.Sprite()
-    begin.image = pg.Surface((80, 100))
+    begin.image = pg.Surface((100, 100))
     begin.image.fill(BEGIN_COLOR)
     begin.rect = begin.image.get_rect()
     begin.rect.center = (100, HEIGHT / 2)
@@ -28,11 +30,18 @@ class Game():
       self.all_sprites.add(path)
 
     end = pg.sprite.Sprite()
-    end.image = pg.Surface((80, 100))
+    end.image = pg.Surface((100, 100))
     end.image.fill(END_COLOR)
     end.rect = end.image.get_rect()
     end.rect.center = (900, HEIGHT / 2)
     self.all_sprites.add(end)
+
+    base = pg.sprite.Sprite()
+    base.image = pg.Surface((100, 100))
+    base.image.fill(BASE_COLOR)
+    base.rect = base.image.get_rect()
+    base.rect.center = (WIDTH / 2, 500)
+    self.all_sprites.add(base)
 
     self.run()
 
