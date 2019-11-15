@@ -12,6 +12,6 @@ from core.main import main
 
 
 if __name__ == '__main__':
-  main()
-  pg.quit()
-  sys.exit()
+    main()
+    pg.quit()
+    sys.exit()
