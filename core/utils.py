@@ -11,6 +11,10 @@ HEIGHT = 768
 MODE = (WIDTH, HEIGHT)
 TITLE = "Niko's Tower Defense"
 
+TURRET_SPRITE = BASE_PATH / 'assets' / 'sprites' / 'turret.html'
+BOMBER_SPRITE = BASE_PATH / 'assets' / 'sprites' / 'bomber.html'
+SNIPER_SPRITE = BASE_PATH / 'assets' / 'sprites' / 'sniper.html'
+
 MINION_SPRITE = BASE_PATH / 'assets' / 'sprites' / 'minion.html'
 RUNNER_SPRITE = BASE_PATH / 'assets' / 'sprites' / 'runner.html'
 FATMAN_SPRITE = BASE_PATH / 'assets' / 'sprites' / 'fatman.html'
