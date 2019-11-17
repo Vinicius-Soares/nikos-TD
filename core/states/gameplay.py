@@ -1,7 +1,9 @@
 import pygame as pg
 
 from .. import state_machine
-from ..utils import COLORS, HEIGHT, WIDTH
+from ..towers import Turret
+from ..mobs import Minion
+from ..utils import COLORS, HEIGHT, MODE, TITLE, WIDTH, load_image, BEGIN_SPRITE
 
 
 class Gameplay(state_machine._State):
@@ -41,6 +43,12 @@ class Gameplay(state_machine._State):
         base.rect = base.image.get_rect()
         base.rect.center = (WIDTH / 2, 500)
         self.all_sprites.add(base)
+
+        turret = Turret(WIDTH / 2, 500)
+        self.all_sprites.add(turret)
+
+        minion = Minion(100, 100)
+        self.all_sprites.add(minion)
 
     def get_event(self, event):
         pass
