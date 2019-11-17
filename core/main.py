@@ -1,7 +1,11 @@
-from .game import Game
-
+from .states import gameplay, menu
+from . import game
 
 def main():
-    g = Game()
-    while g.running:
-        g.new()
+    app = game.Control()
+    state_dict = {
+        "MENU": menu.Menu(),
+        "GAMEPLAY": gameplay.Gameplay()
+    }
+    app.state_machine.setup_states(state_dict, "MENU")
+    app.main()
