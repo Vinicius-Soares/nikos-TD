@@ -3,7 +3,7 @@ import pygame as pg
 from .utils import load_image, MINION_SPRITE, RUNNER_SPRITE, FATMAN_SPRITE
 
 class _Mob(pg.sprite.Sprite):
-    def __init__(self, image_path, damage, speed, attack_rate, angle, x_cor, y_cor):
+    def __init__(self, image_path, damage, speed, attack_rate, x_cor, y_cor):
         pg.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image(image_path, -1)
         self.damage = damage
@@ -11,7 +11,7 @@ class _Mob(pg.sprite.Sprite):
         self.attack_rate = attack_rate
         self.x_cor = x_cor
         self.y_cor = y_cor
-        self.angle = angle
+        # self.angle = angle
         self.rect.center = (x_cor, y_cor)
 
     def update(self):

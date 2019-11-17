@@ -1,5 +1,7 @@
 import pygame as pg
-from .utils import COLORS, HEIGHT, MODE, TITLE, WIDTH
+from .towers import Turret
+from .mobs import Minion
+from .utils import COLORS, HEIGHT, MODE, TITLE, WIDTH, load_image, BEGIN_SPRITE
 
 
 class Game():
@@ -42,6 +44,12 @@ class Game():
         base.rect.center = (WIDTH / 2, 500)
         self.all_sprites.add(base)
 
+        turret = Turret(WIDTH / 2, 500)
+        self.all_sprites.add(turret)
+
+        minion = Minion(100, 100)
+        self.all_sprites.add(minion)
+        
         self.run()
 
     def run(self):
