@@ -7,6 +7,8 @@ class _Tower(pg.sprite.Sprite):
     def __init__(self, image_path, damage, fire_range, fire_rate, cors, mobs, bullets):
         pg.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image(image_path, -1)
+        self.image = pg.transform.scale(self.image, (50,50))
+        self.rect = self.image.get_rect()
         self.damage = damage
         self.fire_range = fire_range
         self.fire_rate = fire_rate

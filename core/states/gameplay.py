@@ -3,7 +3,7 @@ import pygame as pg
 from .. import state_machine
 from ..components import mobs
 from ..components import towers
-from ..utils import COLORS, HEIGHT, MODE, TITLE, WIDTH, BEGIN_SPRITE, END_SPRITE, load_image
+from ..utils import COLORS, HEIGHT, MODE, TITLE, WIDTH, BEGIN_SPRITE, END_SPRITE, ENEMYPATH_SPRITE, TOWERPLACE_SPRITE, load_image
 
 
 class Gameplay(state_machine._State):
@@ -29,30 +29,28 @@ class Gameplay(state_machine._State):
         full_path = full_path[::-1]
 
         begin = pg.sprite.Sprite()
-        begin.image, begin.rect = load_image(BEGIN_SPRITE, -1)
-        begin.image = pg.transform.scale(begin.image, (100,100))
+        begin.image = pg.transform.scale(load_image(BEGIN_SPRITE, -1)[0], (100,100))
+        begin.rect = begin.image.get_rect()
         begin.rect.center = full_path[0]
         self.all_sprites.add(begin)
 
-        for i in range(8):
+        for i in range(7):
             path = pg.sprite.Sprite()
-            path.image = pg.Surface((100, 100))
-            path.image.fill(COLORS['path'])
+            path.image = pg.transform.scale(load_image(ENEMYPATH_SPRITE, -1)[0], (100,100))
             path.rect = path.image.get_rect()
             path.rect.center = full_path[i+1]
             self.all_sprites.add(path)
 
         end = pg.sprite.Sprite()
-        end.image, end.rect = load_image(END_SPRITE, -1)
-        end.image = pg.transform.scale(end.image, (100,100))
+        end.image = pg.transform.scale(load_image(END_SPRITE, -1)[0], (100,100))
+        end.rect = end.image.get_rect()
         end.rect.center = full_path[-1]
         self.all_sprites.add(end)
 
         base = pg.sprite.Sprite()
-        base.image = pg.Surface((100, 100))
-        base.image.fill(COLORS['base'])
+        base.image = pg.transform.scale(load_image(TOWERPLACE_SPRITE, -1)[0], (100,100))
         base.rect = base.image.get_rect()
-        base.rect.center = (WIDTH / 2, 700)
+        base.rect.center = (WIDTH / 2, 300)
         self.all_sprites.add(base)
 
         minion = mobs.Minion(full_path[0], full_path)
