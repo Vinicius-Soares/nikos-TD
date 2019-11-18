@@ -4,18 +4,17 @@ from .. import state_machine
 from ..components import mobs
 from ..components import towers
 from ..utils import COLORS, HEIGHT, MODE, TITLE, WIDTH, BEGIN_SPRITE, END_SPRITE, load_image
-from ..bullet import Bullet
 
 
 class Gameplay(state_machine._State):
     def __init__(self):
         state_machine._State.__init__(self)
         self.next = "MENU"
-        self.new_bullets = []
+        self.bullets = pg.sprite.Group()
+        self.all_sprites = pg.sprite.Group()
 
     def startup(self, now, persistant):
         state_machine._State.startup(self, now, persistant)
-        self.all_sprites = pg.sprite.Group()
 
         full_path = ((100, 100),
                      (100, 200),
@@ -61,7 +60,7 @@ class Gameplay(state_machine._State):
 
         mob_list = [minion]
 
-        turret = towers.Turret((WIDTH / 2, 300), mob_list, self.new_bullets)
+        turret = towers.Turret((WIDTH / 2, 300), mob_list, self.bullets)
         self.all_sprites.add(turret)
 
     def get_event(self, event):
@@ -69,14 +68,9 @@ class Gameplay(state_machine._State):
 
     def update(self, keys, now):
         self.all_sprites.update()
-        for bullet in self.new_bullets:
-            cors = bullet[0]
-            mob = bullet[1]
-            speed = bullet[2]
-            new_bullet = Bullet(cors, mob, speed)
-            self.all_sprites.add(new_bullet)
-            self.new_bullets.pop()
+        self.bullets.update()
 
     def draw(self, surface):
         surface.fill((0, 0, 0))
         self.all_sprites.draw(surface)
+        self.bullets.draw(surface)

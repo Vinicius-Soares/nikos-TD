@@ -1,5 +1,5 @@
 import pygame as pg
-from .utils import load_image, BULLET_SPRITE
+from ..utils import load_image, BULLET_SPRITE
 
 class Bullet(pg.sprite.Sprite):
     def __init__(self, cors, target, speed):

@@ -1,9 +1,10 @@
 # Torres do jogo
 import pygame as pg
+from .bullet import Bullet
 from ..utils import load_image, TURRET_SPRITE, BOMBER_SPRITE, SNIPER_SPRITE
 
 class _Tower(pg.sprite.Sprite):
-    def __init__(self, image_path, damage, fire_range, fire_rate, cors, mobs, new_bullets):
+    def __init__(self, image_path, damage, fire_range, fire_rate, cors, mobs, bullets):
         pg.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image(image_path, -1)
         self.damage = damage
@@ -11,7 +12,7 @@ class _Tower(pg.sprite.Sprite):
         self.fire_rate = fire_rate
         self.x_cor, self.y_cor = cors
         self.rect.center = cors
-        self.new_bullets = new_bullets
+        self.bullets = bullets
         self.mobs = mobs
         self.timer = 200
 
@@ -21,15 +22,16 @@ class _Tower(pg.sprite.Sprite):
             for mob in self.mobs:
                 is_in_range = (self.x_cor-mob.x_cor)**2 + (self.y_cor-mob.y_cor)**2 < self.fire_range**2
                 if is_in_range:
-                    self.new_bullets.append(((self.x_cor, self.y_cor), mob, 2))
+                    new_bullet = Bullet((self.x_cor, self.y_cor), mob, 2)
+                    self.bullets.add(new_bullet)
         self.timer+= 1
 
     def fire(self):
         pass
 
 class Turret(_Tower):
-    def __init__(self, cors, mobs, new_bullets):
-        super().__init__(TURRET_SPRITE, 1,300, 200, cors, mobs, new_bullets)
+    def __init__(self, cors, mobs, bullets):
+        super().__init__(TURRET_SPRITE, 1,300, 200, cors, mobs, bullets)
 
     def update(self):
         super().update()
