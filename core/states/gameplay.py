@@ -3,13 +3,15 @@ import pygame as pg
 from .. import state_machine
 from ..towers import Turret
 from ..mobs import Minion
-from ..utils import COLORS, HEIGHT, MODE, TITLE, WIDTH, load_image, BEGIN_SPRITE
+from ..utils import COLORS, HEIGHT, MODE, TITLE, WIDTH, BEGIN_SPRITE, END_SPRITE, load_image
+from ..bullet import Bullet
 
 
 class Gameplay(state_machine._State):
     def __init__(self):
         state_machine._State.__init__(self)
         self.next = "MENU"
+        self.new_bullets = []
 
     def startup(self, now, persistant):
         state_machine._State.startup(self, now, persistant)
@@ -25,10 +27,11 @@ class Gameplay(state_machine._State):
                      (400, 500),
                      (500, 500))
 
+        full_path = full_path[::-1]
+
         begin = pg.sprite.Sprite()
-        begin.image = pg.Surface((100, 100))
-        begin.image.fill(COLORS['begin'])
-        begin.rect = begin.image.get_rect()
+        begin.image, begin.rect = load_image(BEGIN_SPRITE, -1)
+        begin.image = pg.transform.scale(begin.image, (100,100))
         begin.rect.center = full_path[0]
         self.all_sprites.add(begin)
 
@@ -41,9 +44,8 @@ class Gameplay(state_machine._State):
             self.all_sprites.add(path)
 
         end = pg.sprite.Sprite()
-        end.image = pg.Surface((100, 100))
-        end.image.fill(COLORS['end'])
-        end.rect = end.image.get_rect()
+        end.image, end.rect = load_image(END_SPRITE, -1)
+        end.image = pg.transform.scale(end.image, (100,100))
         end.rect.center = full_path[-1]
         self.all_sprites.add(end)
 
@@ -54,17 +56,26 @@ class Gameplay(state_machine._State):
         base.rect.center = (WIDTH / 2, 700)
         self.all_sprites.add(base)
 
-        turret = Turret(WIDTH / 2, 300)
-        self.all_sprites.add(turret)
-
         minion = Minion(full_path[0], full_path)
         self.all_sprites.add(minion)
+
+        mob_list = [minion]
+
+        turret = Turret((WIDTH / 2, 300), mob_list, self.new_bullets)
+        self.all_sprites.add(turret)
 
     def get_event(self, event):
         pass
 
     def update(self, keys, now):
         self.all_sprites.update()
+        for bullet in self.new_bullets:
+            cors = bullet[0]
+            mob = bullet[1]
+            speed = bullet[2]
+            new_bullet = Bullet(cors, mob, speed)
+            self.all_sprites.add(new_bullet)
+            self.new_bullets.pop()
 
     def draw(self, surface):
         surface.fill((0, 0, 0))

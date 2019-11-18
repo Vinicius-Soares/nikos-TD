@@ -25,6 +25,8 @@ MINION_SPRITE = BASE_PATH / 'sprites' / 'minion.png'
 RUNNER_SPRITE = BASE_PATH / 'sprites' / 'runner.html'
 FATMAN_SPRITE = BASE_PATH / 'sprites' / 'fatman.html'
 
+BULLET_SPRITE = BASE_PATH / 'sprites' / 'begin.png'
+
 COLORS = {
     'black': (0, 0, 0),
     'white': (255, 255, 255),
