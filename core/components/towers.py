@@ -56,3 +56,4 @@ class Sniper(_Tower):
 
     def fire(self):
         pass
+    

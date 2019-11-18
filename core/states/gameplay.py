@@ -1,8 +1,8 @@
 import pygame as pg
 
 from .. import state_machine
-from ..towers import Turret
-from ..mobs import Minion
+from ..components import mobs
+from ..components import towers
 from ..utils import COLORS, HEIGHT, MODE, TITLE, WIDTH, BEGIN_SPRITE, END_SPRITE, load_image
 from ..bullet import Bullet
 
@@ -56,12 +56,12 @@ class Gameplay(state_machine._State):
         base.rect.center = (WIDTH / 2, 700)
         self.all_sprites.add(base)
 
-        minion = Minion(full_path[0], full_path)
+        minion = mobs.Minion(full_path[0], full_path)
         self.all_sprites.add(minion)
 
         mob_list = [minion]
 
-        turret = Turret((WIDTH / 2, 300), mob_list, self.new_bullets)
+        turret = towers.Turret((WIDTH / 2, 300), mob_list, self.new_bullets)
         self.all_sprites.add(turret)
 
     def get_event(self, event):

@@ -72,3 +72,4 @@ class Fatman(_Mob):
         
     def fire(self):
         pass
+    
