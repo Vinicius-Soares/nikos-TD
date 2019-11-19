@@ -1,7 +1,15 @@
 # Torres do jogo
 import pygame as pg
+from enum import Enum
+
 from .bullet import Bullet
 from ..utils import load_image, TURRET_SPRITE, BOMBER_SPRITE, SNIPER_SPRITE
+
+class TowerBehavior(Enum):
+    FIRST = 1
+    RANDOM = 2
+    STRONG = 3
+    WEAK = 4
 
 class _Tower(pg.sprite.Sprite):
     def __init__(self, image_path, damage, fire_range, fire_rate, cors, mobs, bullets):
@@ -17,6 +25,7 @@ class _Tower(pg.sprite.Sprite):
         self.bullets = bullets
         self.mobs = mobs
         self.timer = 200
+        self.behavior = TowerBehavior.FIRST
 
     def update(self):
         if self.timer == 200:
@@ -26,7 +35,7 @@ class _Tower(pg.sprite.Sprite):
                 if is_in_range:
                     new_bullet = Bullet((self.x_cor, self.y_cor), mob, 2)
                     self.bullets.add(new_bullet)
-        self.timer+= 1
+        self.timer += 1
 
     def fire(self):
         pass
@@ -37,6 +46,7 @@ class Turret(_Tower):
 
     def update(self):
         super().update()
+        
     
     def fire(self):
         pass
