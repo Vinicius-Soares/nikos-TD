@@ -22,7 +22,6 @@ class Gameplay(state_machine._State):
                           (500, 500))[::-1]
         self.i = 0
         self.money = 100
-        print(self.money)
 
     def startup(self, now, persistant):
         state_machine._State.startup(self, now, persistant)
@@ -44,6 +43,11 @@ class Gameplay(state_machine._State):
         base = TowerPlace((512, 300))
         self.tower_places.append(base)
 
+        minion = mobs.Minion(1, self.full_path[0], self.full_path)
+        self.mobs.append(minion)
+
+        self.last_spawn_time = pg.time.get_ticks()
+
     def get_event(self, event):
         if event.type == pg.MOUSEBUTTONUP:
             x, y = pg.mouse.get_pos()
@@ -53,9 +57,10 @@ class Gameplay(state_machine._State):
                     tower_place.set_tower("turret", self.mobs, self.bullets)
 
     def update(self, keys, now):
-        if(self.i % 150 == 0):
+        if pg.time.get_ticks() - self.last_spawn_time >= 1000:
             minion = mobs.Minion(1, self.full_path[0], self.full_path)
             self.mobs.append(minion)
+            self.last_spawn_time = pg.time.get_ticks()
 
         self.all_sprites.update()
 
@@ -72,7 +77,6 @@ class Gameplay(state_machine._State):
             else:
                 if mob.health <= 0:
                     self.money += mob.reward
-                    print(self.money)
                 self.mobs.remove(mob)
 
         self.i += 1
@@ -99,7 +103,7 @@ class EnemyPath(pg.sprite.Sprite):
         self.image = pg.transform.scale(load_image(PATH_TYPES[path_type], -1)[0], (100, 100))
         self.rect = self.image.get_rect()
         self.rect.center = cors
-    
+
 
 
 class TowerPlace(pg.sprite.Sprite):

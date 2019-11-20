@@ -10,7 +10,7 @@ class StateMachine(object):
         self.state_dict = state_dict
         self.state_name = start_state
         self.state = self.state_dict[self.state_name]
-    
+
     def update(self, keys, now):
         self.now = now
         if self.state.quit:
