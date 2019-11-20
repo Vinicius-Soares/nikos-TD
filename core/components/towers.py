@@ -43,26 +43,28 @@ class _Tower(pg.sprite.Sprite):
 
     def update(self):
         if self.timer == 100:
-            print(self.target)
             self.timer = 0
             if self.target:
                 if not self.is_in_range(self.target) or self.target.health <= 0:
                     self.target = None
             mob_index = 0
             while mob_index < len(self.mobs) and self.target is None:
-                if self.is_in_range(self.mobs.sprites()[mob_index]):
-                    self.target = self.mobs.sprites()[mob_index]
+                if self.is_in_range(self.mobs[mob_index]):
+                    self.target = self.mobs[mob_index]
                 mob_index += 1
             if self.target:
                 self.fire()
         self.timer += 1
+
+    def draw(self, surface):
+        surface.blit(self.image, self.rect.center)
 
     def search_target(self):
         pass
 
     def fire(self):
         new_bullet = Bullet((self.x_cor, self.y_cor), self.target, 2)
-        self.bullets.add(new_bullet)
+        self.bullets.append(new_bullet)
 
     def is_in_range(self, mob):
         x, xo, y, yo = self.x_cor, mob.x_cor, self.y_cor, mob.y_cor
@@ -76,6 +78,9 @@ class Turret(_Tower):
 
     def update(self):
         super().update()
+
+    def draw(self, surface):
+        super().draw(surface)
 
 
 class Bomber(_Tower):

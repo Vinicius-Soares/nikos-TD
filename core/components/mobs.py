@@ -44,7 +44,7 @@ class _Mob(pg.sprite.Sprite):
             if self.x_cor == next_x and self.y_cor == next_y:
                 if self._next_block_index < len(self.path) - 1:
                     self._next_block_index += 1
-                else: self.kill()
+                else: self.done = True
                 block_x, block_y = self.path[self._next_block_index]
 
                 current_block_index = self._next_block_index - 1
@@ -57,6 +57,9 @@ class _Mob(pg.sprite.Sprite):
                 self.x_cor += int(self._dx)
                 self.y_cor += int(self._dy)
                 self.rect.center = (self.x_cor, self.y_cor)
+
+    def draw(self, surface):
+        if not self.done: surface.blit(self.image, self.rect.center)
 
 class Minion(_Mob):
     def __init__(self, level, cors, path):
@@ -72,6 +75,9 @@ class Minion(_Mob):
 
     def update(self):
         super().update()
+
+    def draw(self, surface):
+        super().draw(surface)
 
 class Runner(_Mob):
     def __init__(self, level, cors, path):

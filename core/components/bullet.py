@@ -12,10 +12,11 @@ class Bullet(pg.sprite.Sprite):
         self.target = target
         self.speed= speed
         self.damage = 2
+        self.done = False
 
     def update(self):
-        self._dx = ((self.target.x_cor-self.x_cor)*self.speed)/10
-        self._dy = ((self.target.y_cor-self.y_cor)*self.speed)/10
+        self._dx = ((self.target.x_cor-self.x_cor) * self.speed) / 10
+        self._dy = ((self.target.y_cor-self.y_cor) * self.speed) / 10
 
         self.x_cor += self._dx
         self.y_cor += self._dy
@@ -24,5 +25,8 @@ class Bullet(pg.sprite.Sprite):
         hit_target = self.rect.colliderect(self.target.rect)
         if hit_target:
             self.target.health -= self.damage
-            if self.target.health <= 0: self.target.kill()
-            self.kill()
+            if self.target.health <= 0: self.target.done = True
+            self.done = True
+
+    def draw(self, surface):
+        if not self.done: surface.blit(self.image, self.rect.center)
