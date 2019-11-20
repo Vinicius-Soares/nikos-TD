@@ -1,15 +1,7 @@
 # Torres do jogo
 import pygame as pg
-from enum import Enum
-
 from .bullet import Bullet
 from ..utils import load_image, TURRET_SPRITE, BOMBER_SPRITE, SNIPER_SPRITE
-
-class TowerBehavior(Enum):
-    FIRST = 1
-    RANDOM = 2
-    STRONG = 3
-    WEAK = 4
 
 class _Tower(pg.sprite.Sprite):
     def __init__(self, image_path, damage, fire_range, fire_rate, cors, mobs, bullets):
@@ -24,32 +16,41 @@ class _Tower(pg.sprite.Sprite):
         self.rect.center = cors
         self.bullets = bullets
         self.mobs = mobs
-        self.timer = 200
-        self.behavior = TowerBehavior.FIRST
+        self.target = None
+        self.timer = 100
 
     def update(self):
-        if self.timer == 200:
+        if self.timer == 100:
+            print(self.target)
             self.timer = 0
-            for mob in self.mobs:
-                is_in_range = (self.x_cor-mob.x_cor)**2 + (self.y_cor-mob.y_cor)**2 < self.fire_range**2
-                if is_in_range:
-                    new_bullet = Bullet((self.x_cor, self.y_cor), mob, 2)
-                    self.bullets.add(new_bullet)
-        self.timer += 1
+            if self.target:
+                if not self.is_in_range(self.target) or self.target.health<=0:
+                    self.target = None
+            mob_index = 0
+            while mob_index < len(self.mobs) and self.target is None:
+                if self.is_in_range(self.mobs.sprites()[mob_index]): 
+                    self.target = self.mobs.sprites()[mob_index]
+                mob_index+=1
+            if self.target:
+                self.fire(self.target)
+        self.timer+= 1
 
-    def fire(self):
-        pass
+    def fire(self, mob):
+        new_bullet = Bullet((self.x_cor, self.y_cor), mob, 2)
+        self.bullets.add(new_bullet)
+
+    def is_in_range(self, mob):
+        x, xo, y, yo = self.x_cor, mob.x_cor, self.y_cor, mob.y_cor
+        return (x-xo)**2 + (y-yo)**2 < self.fire_range**2
+
 
 class Turret(_Tower):
     def __init__(self, cors, mobs, bullets):
-        super().__init__(TURRET_SPRITE, 1,300, 200, cors, mobs, bullets)
+        super().__init__(TURRET_SPRITE, 1,300, 100, cors, mobs, bullets)
 
     def update(self):
         super().update()
-        
     
-    def fire(self):
-        pass
 
 class Bomber(_Tower):
     def __init__(self, cors, mobs):
