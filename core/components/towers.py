@@ -55,6 +55,9 @@ class _Tower(pg.sprite.Sprite):
                 self.fire()
         self.timer += 1
 
+    def search_target(self):
+        pass
+
     def fire(self):
         new_bullet = Bullet((self.x_cor, self.y_cor), self.target, 2)
         self.bullets.add(new_bullet)

@@ -17,12 +17,12 @@ class Bullet(pg.sprite.Sprite):
         self._dx = ((self.target.x_cor-self.x_cor)*self.speed)/10
         self._dy = ((self.target.y_cor-self.y_cor)*self.speed)/10
 
-        self.x_cor+=self._dx
-        self.y_cor+=self._dy
+        self.x_cor += self._dx
+        self.y_cor += self._dy
 
         self.rect.center = (self.x_cor, self.y_cor)
         hit_target = self.rect.colliderect(self.target.rect)
         if hit_target:
-            self.target.health-=self.damage
-            if self.target.health == 0: self.target.kill() 
+            self.target.health -= self.damage
+            if self.target.health <= 0: self.target.kill()
             self.kill()
