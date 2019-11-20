@@ -11,7 +11,7 @@ class Control(object):
         self.now = 0.0
         self.keys = pg.key.get_pressed()
         self.state_machine = state_machine.StateMachine()
-    
+
     def initialize(self):
         pg.init()
         pg.mixer.init()
@@ -38,5 +38,4 @@ class Control(object):
         while not self.done:
             self.event_loop()
             self.update()
-            self.draw()     
-            
+            self.draw()

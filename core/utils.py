@@ -1,10 +1,12 @@
 import os
+import pygame as pg
+
 from pathlib import Path
 from pygame.image import load
 from pygame import error, RLEACCEL
 
 BASE_PATH = Path()
-FONT = BASE_PATH / 'assets' / 'fonts' / 'Pixeled.ttf'
+FONT_PATH = BASE_PATH / 'assets' / 'fonts' / 'Pixeled.ttf'
 
 WIDTH = 1024
 HEIGHT = 768
