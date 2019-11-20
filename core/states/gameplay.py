@@ -21,6 +21,8 @@ class Gameplay(state_machine._State):
                           (400, 500),
                           (500, 500))[::-1]
         self.i = 0
+        self.money = 100
+        print(self.money)
 
     def startup(self, now, persistant):
         state_machine._State.startup(self, now, persistant)
@@ -77,7 +79,9 @@ class Gameplay(state_machine._State):
         for mob in self.mobs:
             if not mob.done: mob.update()
             else:
-                if mob.health <= 0: pass # incrementar o dinheiro
+                if mob.health <= 0:
+                    self.money += mob.reward
+                    print(self.money)
                 self.mobs.remove(mob)
 
         self.i += 1

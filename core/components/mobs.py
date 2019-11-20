@@ -6,21 +6,24 @@ MINION_ATTRIBUTES = {
     'name':  "minion",
     'health': 4,
     'speed' : 1,
-    'damage': 1
+    'damage': 1,
+    'reward': 24
 }
 
 RUNNER_ATTRIBUTES = {
     'name':  "runner",
     'health': 2,
     'speed' : 1.5,
-    'damage': 0.5
+    'damage': 0.5,
+    'reward': 12
 }
 
 FATMAN_ATTRIBUTES = {
     'name':  "fatman",
     'health': 8,
     'speed' : 0.3,
-    'damage': 2
+    'damage': 2,
+    'reward': 50
 }
 
 class _Mob(pg.sprite.Sprite):
