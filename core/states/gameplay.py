@@ -3,7 +3,7 @@ import pygame as pg
 from .. import state_machine
 from ..components import mobs
 from ..components import towers
-from ..utils import COLORS, HEIGHT, MODE, TITLE, WIDTH, BEGIN_SPRITE, END_SPRITE, ENEMYPATH_SPRITE, TOWERPLACE_SPRITE, load_image
+from ..utils import COLORS, HEIGHT, MODE, TITLE, WIDTH, PATH_TYPES, TOWERPLACE_SPRITE, load_image
 
 
 class Gameplay(state_machine._State):
@@ -31,23 +31,14 @@ class Gameplay(state_machine._State):
         self.mobs = []
         self.bullets = []
 
-        begin = pg.sprite.Sprite()
-        begin.image = pg.transform.scale(load_image(BEGIN_SPRITE, -1)[0], (100,100))
-        begin.rect = begin.image.get_rect()
-        begin.rect.center = self.full_path[0]
+        begin = EnemyPath("begin", self.full_path[0])
         self.all_sprites.add(begin)
 
         for i in range(7):
-            path = pg.sprite.Sprite()
-            path.image = pg.transform.scale(load_image(ENEMYPATH_SPRITE, -1)[0], (100,100))
-            path.rect = path.image.get_rect()
-            path.rect.center = self.full_path[i+1]
+            path = EnemyPath("enemy", self.full_path[i+1])
             self.all_sprites.add(path)
 
-        end = pg.sprite.Sprite()
-        end.image = pg.transform.scale(load_image(END_SPRITE, -1)[0], (100,100))
-        end.rect = end.image.get_rect()
-        end.rect.center = self.full_path[-1]
+        end = EnemyPath("end", self.full_path[-1])
         self.all_sprites.add(end)
 
         base = TowerPlace((WIDTH / 2, 300))
@@ -102,8 +93,13 @@ class Gameplay(state_machine._State):
 
 
 class EnemyPath(pg.sprite.Sprite):
-    def __init__(self, type, cors):
-        pass
+    def __init__(self, path_type, cors):
+        super().__init__()
+        self.type = path_type
+        self.image = pg.transform.scale(load_image(PATH_TYPES[path_type], -1)[0], (100, 100))
+        self.rect = self.image.get_rect()
+        self.rect.center = cors
+    
 
 
 class TowerPlace(pg.sprite.Sprite):

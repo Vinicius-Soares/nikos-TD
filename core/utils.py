@@ -16,6 +16,13 @@ TITLE = "Niko's Tower Defense"
 BEGIN_SPRITE = BASE_PATH / 'sprites' / 'begin.png'
 END_SPRITE = BASE_PATH / 'sprites' / 'end.png'
 ENEMYPATH_SPRITE = BASE_PATH / 'sprites' / 'enemy_path.png'
+
+PATH_TYPES = {
+    "begin": BEGIN_SPRITE,
+    "end": END_SPRITE,
+    "enemy": ENEMYPATH_SPRITE
+}
+
 TOWERPLACE_SPRITE = BASE_PATH / 'sprites' / 'tower_place.png'
 
 TURRET_SPRITE = BASE_PATH / 'sprites' / 'turret.png'
