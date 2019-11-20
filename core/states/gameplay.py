@@ -60,12 +60,12 @@ class Gameplay(state_machine._State):
 
     def update(self, keys, now):
         if(self.i % 150 == 0):
-            minion = mobs.Minion(self.full_path[0], self.full_path)
+            minion = mobs.Minion(1, self.full_path[0], self.full_path)
             self.mobs.add(minion)
         self.all_sprites.update()
         self.mobs.update()
         self.bullets.update()
-        self.i+=1
+        self.i += 1
 
     def draw(self, surface):
         surface.fill((0, 0, 0))

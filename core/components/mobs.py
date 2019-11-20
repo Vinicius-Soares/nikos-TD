@@ -2,17 +2,35 @@
 import pygame as pg
 from ..utils import load_image, MINION_SPRITE, RUNNER_SPRITE, FATMAN_SPRITE
 
+MINION_ATTRIBUTES = {
+    'health': 4,
+    'speed' : 1,
+    'damage': 1
+}
+
+RUNNER_ATTRIBUTES = {
+    'health': 2,
+    'speed' : 1.5,
+    'damage': 0.5
+}
+
+FATMAN_ATTRIBUTES = {
+    'health': 8,
+    'speed' : 0.3,
+    'damage': 2
+}
+
 class _Mob(pg.sprite.Sprite):
-    def __init__(self, image_path, damage, speed, health, cors, path):
+    def __init__(self, image_path, cors, path):
         pg.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image(image_path, -1)
-        self.damage = damage
-        self.speed = speed
-        self.health = health
         self.x_cor, self.y_cor = cors
-        self.path = path
         self.rect.center = cors
+        self.path = path
         self._next_block_index = 0
+
+    def update_attributes(self):
+        pass
 
     def update(self):
         reached_destiny = self._next_block_index == len(self.path)
@@ -21,55 +39,62 @@ class _Mob(pg.sprite.Sprite):
 
             if self.x_cor == next_x and self.y_cor == next_y:
                 if self._next_block_index < len(self.path) - 1:
-                    self._next_block_index+=1
+                    self._next_block_index += 1
                 else: self.kill()
                 block_x, block_y = self.path[self._next_block_index]
 
-                current_block_index = self._next_block_index-1
+                current_block_index = self._next_block_index - 1
                 current_block_x, current_block_y = self.path[current_block_index]
 
-                self._dx = (block_x - current_block_x)/(100-self.speed)
-                self._dy = (block_y - current_block_y)/(100-self.speed)
+                self._dx = (block_x - current_block_x) / (100-self.speed)
+                self._dy = (block_y - current_block_y) / (100-self.speed)
 
             else:
-                self.x_cor+=int(self._dx)
-                self.y_cor+=int(self._dy)
+                self.x_cor += int(self._dx)
+                self.y_cor += int(self._dy)
                 self.rect.center = (self.x_cor, self.y_cor)
-    
-    
-    def fire(self):
-        pass
 
 class Minion(_Mob):
-    def __init__(self, cors, path):
-        self._next_block_index = 0
-        super().__init__(MINION_SPRITE, 1,1,4, cors, path)
+    def __init__(self, level, cors, path):
+        super().__init__(MINION_SPRITE, cors, path)
+        self.__dict__.update(MINION_ATTRIBUTES)
+        self.level = level
+        if level > 1: self.update_attributes()
+
+    def update_attributes(self):
+        self.health += (self.level - 1) * 0.5
+        self.speed += (self.level - 1) * 0.2
+        self.damage += (self.level - 1) * 1
 
     def update(self):
         super().update()
-    
-    def fire(self):
-        pass
 
 class Runner(_Mob):
-    def __init__(self, cors):
-        x_cor, y_cor = cors
-        super().__init__(RUNNER_SPRITE, 1,1,1, x_cor, y_cor)
+    def __init__(self, level, cors, path):
+        super().__init__(RUNNER_SPRITE, cors, path)
+        self.__dict__.update(RUNNER_ATTRIBUTES)
+        self.level = level
+        if level > 1: self.update_attributes()
+
+    def update_attributes(self):
+        self.health += (self.level - 1) * 0.2
+        self.speed += (self.level - 1) * 0.2
+        self.damage += (self.level - 1) * 0.2
 
     def update(self):
         super().update()
-
-    def fire(self):
-        pass
 
 class Fatman(_Mob):
-    def __init__(self, cors):
-        x_cor, y_cor = cors
-        super().__init__(FATMAN_SPRITE, 1,1,1, x_cor, y_cor)
+    def __init__(self, level, cors, path):
+        super().__init__(FATMAN_SPRITE, cors, path)
+        self.__dict__.update(FATMAN_ATTRIBUTES)
+        self.level = level
+        if level > 1: self.update_attributes()
+
+    def update_attributes(self):
+        self.health += (self.level - 1) * 1.5
+        self.speed += (self.level - 1) * 0.4
+        self.damage += (self.level - 1) * 0.4
 
     def update(self):
         super().update()
-        
-    def fire(self):
-        pass
-    
