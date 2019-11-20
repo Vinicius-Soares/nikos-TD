@@ -13,28 +13,32 @@ HEIGHT = 768
 MODE = (WIDTH, HEIGHT)
 TITLE = "Niko's Tower Defense"
 
-BEGIN_SPRITE = BASE_PATH / 'sprites' / 'begin.png'
-END_SPRITE = BASE_PATH / 'sprites' / 'end.png'
-ENEMYPATH_SPRITE = BASE_PATH / 'sprites' / 'enemy_path.png'
-
+SPRITE_PATH = BASE_PATH / 'sprites'
 PATH_TYPES = {
-    "begin": BEGIN_SPRITE,
-    "end": END_SPRITE,
-    "enemy": ENEMYPATH_SPRITE
+    "begin": SPRITE_PATH / "begin.png",
+    "end": SPRITE_PATH / "end.png",
+    "enemy": SPRITE_PATH / "enemy_path.png"
 }
 
-TOWERPLACE_SPRITE = BASE_PATH / 'sprites' / 'tower_place.png'
+TOWERPLACE_SPRITE = SPRITE_PATH / 'tower_place.png'
 
-TURRET_SPRITE = BASE_PATH / 'sprites' / 'turret.png'
-BOMBER_SPRITE = BASE_PATH / 'sprites' / 'bomber.html'
-SNIPER_SPRITE = BASE_PATH / 'sprites' / 'sniper.html'
+TOWER_SPRITES = {
+    "turret": SPRITE_PATH / "turret.png",
+    "bomber": SPRITE_PATH / "bomber.png",
+    "sniper": SPRITE_PATH / "sniper.png"
+}
 
+ENEMY_SPRITES = {
+    "minion": SPRITE_PATH / "minion.png",
+    "runner": SPRITE_PATH / "runner.png",
+    "fatman": SPRITE_PATH / "fatman.png"
+}
 
-MINION_SPRITE = BASE_PATH / 'sprites' / 'minion.png'
-RUNNER_SPRITE = BASE_PATH / 'sprites' / 'runner.html'
-FATMAN_SPRITE = BASE_PATH / 'sprites' / 'fatman.html'
-
-BULLET_SPRITE = BASE_PATH / 'sprites' / 'bullet_turret.png'
+BULLET_SPRITES = {
+    "turret": SPRITE_PATH / "bullet_turret.png",
+    "bomber": SPRITE_PATH / "bullet_bomber.png",
+    "sniper": SPRITE_PATH / "bullet_sniper.png"
+}
 
 COLORS = {
     'black': (0, 0, 0),

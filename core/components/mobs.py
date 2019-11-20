@@ -1,6 +1,6 @@
 # Inimigos do jogo
 import pygame as pg
-from ..utils import load_image, MINION_SPRITE, RUNNER_SPRITE, FATMAN_SPRITE
+from ..utils import load_image, ENEMY_SPRITES
 
 MINION_ATTRIBUTES = {
     'name':  "minion",
@@ -66,7 +66,7 @@ class _Mob(pg.sprite.Sprite):
 
 class Minion(_Mob):
     def __init__(self, level, cors, path):
-        super().__init__(MINION_SPRITE, cors, path)
+        super().__init__(ENEMY_SPRITES["minion"], cors, path)
         self.__dict__.update(MINION_ATTRIBUTES)
         self.level = level
         if level > 1: self.update_attributes()
@@ -84,7 +84,7 @@ class Minion(_Mob):
 
 class Runner(_Mob):
     def __init__(self, level, cors, path):
-        super().__init__(RUNNER_SPRITE, cors, path)
+        super().__init__(ENEMY_SPRITES["runner"], cors, path)
         self.__dict__.update(RUNNER_ATTRIBUTES)
         self.level = level
         if level > 1: self.update_attributes()
@@ -99,7 +99,7 @@ class Runner(_Mob):
 
 class Fatman(_Mob):
     def __init__(self, level, cors, path):
-        super().__init__(FATMAN_SPRITE, cors, path)
+        super().__init__(ENEMY_SPRITES["fatman"], cors, path)
         self.__dict__.update(FATMAN_ATTRIBUTES)
         self.level = level
         if level > 1: self.update_attributes()

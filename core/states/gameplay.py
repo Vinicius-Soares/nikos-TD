@@ -3,7 +3,7 @@ import pygame as pg
 from .. import state_machine
 from ..components import mobs
 from ..components import towers
-from ..utils import COLORS, HEIGHT, MODE, TITLE, WIDTH, PATH_TYPES, TOWERPLACE_SPRITE, load_image
+from ..utils import PATH_TYPES, TOWERPLACE_SPRITE, load_image
 
 
 class Gameplay(state_machine._State):
@@ -41,7 +41,7 @@ class Gameplay(state_machine._State):
         end = EnemyPath("end", self.full_path[-1])
         self.all_sprites.add(end)
 
-        base = TowerPlace((WIDTH / 2, 300))
+        base = TowerPlace((512, 300))
         self.tower_places.append(base)
 
     def get_event(self, event):

@@ -1,8 +1,7 @@
 # Torres do jogo
 import pygame as pg
 from .bullet import Bullet
-from ..utils import load_image, TURRET_SPRITE, BOMBER_SPRITE, SNIPER_SPRITE
-
+from ..utils import load_image, TOWER_SPRITES
 
 TURRET_ATTRIBUTES = {
     'name':       "turret",
@@ -73,7 +72,7 @@ class _Tower(pg.sprite.Sprite):
 
 class Turret(_Tower):
     def __init__(self, cors, mobs, bullets):
-        super().__init__(TURRET_SPRITE, cors, mobs, bullets)
+        super().__init__(TOWER_SPRITES["turret"], cors, mobs, bullets)
         self.__dict__.update(TURRET_ATTRIBUTES)
 
     def update(self):
@@ -85,7 +84,7 @@ class Turret(_Tower):
 
 class Bomber(_Tower):
     def __init__(self, cors, mobs):
-        super().__init__(BOMBER_SPRITE, cors, [], [])
+        super().__init__(TOWER_SPRITES["bomber"], cors, [], [])
         self.__dict__.update(BOMBER_ATTRIBUTES)
 
     def update(self):
@@ -97,7 +96,7 @@ class Bomber(_Tower):
 
 class Sniper(_Tower):
     def __init__(self, cors, mobs):
-        super().__init__(SNIPER_SPRITE, cors, [], [])
+        super().__init__(TOWER_SPRITES["sniper"], cors, [], [])
         self.__dict__.update(SNIPER_ATTRIBUTES)
 
     def update(self):
