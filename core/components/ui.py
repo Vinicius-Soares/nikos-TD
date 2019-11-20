@@ -1,6 +1,7 @@
 # Elementos de UI do jogo
 import pygame as pg
 
+
 class _Button(pg.sprite.Sprite):
     def __init__(self, text, color, text_color):
         pg.sprite.Sprite.__init__(self)
@@ -13,6 +14,7 @@ class _Button(pg.sprite.Sprite):
 
     def draw(self):
         pass
+
 
 class _Hud(pg.Rect):
     def __init__(self, pos, width, length):

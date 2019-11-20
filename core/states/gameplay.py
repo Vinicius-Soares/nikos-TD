@@ -12,6 +12,7 @@ class Gameplay(state_machine._State):
         self.next = "MENU"
         self.bullets = pg.sprite.Group()
         self.all_sprites = pg.sprite.Group()
+        self.tower_places = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
         self.full_path = ((100, 100),
                           (100, 200),
@@ -46,17 +47,18 @@ class Gameplay(state_machine._State):
         end.rect.center = self.full_path[-1]
         self.all_sprites.add(end)
 
-        base = pg.sprite.Sprite()
-        base.image = pg.transform.scale(load_image(TOWERPLACE_SPRITE, -1)[0], (100,100))
-        base.rect = base.image.get_rect()
-        base.rect.center = (WIDTH / 2, 300)
-        self.all_sprites.add(base)
+        base = TowerPlace((WIDTH / 2, 300))
+        self.tower_places.add(base)
 
         turret = towers.Turret((WIDTH / 2, 300), self.mobs, self.bullets)
         self.all_sprites.add(turret)
 
     def get_event(self, event):
-        pass
+        if event.type == pg.MOUSEBUTTONUP:
+            x, y = pg.mouse.get_pos()
+            for tower_place in self.tower_places:
+                if tower_place.click_on_it(x, y):
+                    print("Click!")
 
     def update(self, keys, now):
         if(self.i % 150 == 0):
@@ -69,6 +71,24 @@ class Gameplay(state_machine._State):
 
     def draw(self, surface):
         surface.fill((0, 0, 0))
+        self.tower_places.draw(surface)
         self.all_sprites.draw(surface)
         self.mobs.draw(surface)
         self.bullets.draw(surface)
+
+
+class TowerPlace(pg.sprite.Sprite):
+    def __init__(self, cors):
+        super().__init__()
+        self.image = pg.transform.scale(load_image(TOWERPLACE_SPRITE, -1)[0], (100,100))
+        self.rect = self.image.get_rect()
+        self.rect.center = cors
+
+    def set_tower(self, tower):
+        self.tower = tower
+
+    def remove_tower(self):
+        self.tower = None
+
+    def click_on_it(self, x, y):
+        return self.rect.collidepoint(x, y)

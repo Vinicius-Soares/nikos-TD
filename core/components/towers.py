@@ -3,6 +3,7 @@ import pygame as pg
 from .bullet import Bullet
 from ..utils import load_image, TURRET_SPRITE, BOMBER_SPRITE, SNIPER_SPRITE
 
+
 TURRET_ATTRIBUTES = {
     'name':       "turret",
     'damage':      1,
@@ -24,6 +25,7 @@ SNIPER_ATTRIBUTES = {
     'fire_range': 500,
     'fire_rate':  75
 }
+
 
 class _Tower(pg.sprite.Sprite):
     def __init__(self, image_path, cors, mobs, bullets):
@@ -86,6 +88,7 @@ class Bomber(_Tower):
 
     def fire(self):
         pass
+
 
 class Sniper(_Tower):
     def __init__(self, cors, mobs):
