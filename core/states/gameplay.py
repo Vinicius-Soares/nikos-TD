@@ -40,7 +40,7 @@ class Gameplay(state_machine._State):
         end = EnemyPath("end", self.full_path[-1])
         self.all_sprites.add(end)
 
-        base = TowerPlace((512, 300))
+        base = TowerPlace((562, 350))
         self.tower_places.append(base)
 
         minion = mobs.Minion(1, self.full_path[0], self.full_path)
@@ -119,8 +119,7 @@ class TowerPlace(pg.sprite.Sprite):
 
     def set_tower(self, tower_name, mobs, bullets):
         if tower_name == "turret":
-            tower_rect_center = (self.rect.center[0] + 25, self.rect.center[1] + 25)
-            self.tower = towers.Turret(tower_rect_center, mobs, bullets)
+            self.tower = towers.Turret(self.rect.center, mobs, bullets)
         elif tower_name == "bomber": pass
         else: pass
 
@@ -134,6 +133,6 @@ class TowerPlace(pg.sprite.Sprite):
         if self.tower: self.tower.update()
 
     def draw(self, surface):
-        surface.blit(self.image, self.rect.center)
+        surface.blit(self.image, self.rect.topleft)
         if self.tower: self.tower.draw(surface)
         if self.selected: pass
