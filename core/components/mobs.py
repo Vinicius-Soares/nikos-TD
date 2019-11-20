@@ -3,12 +3,12 @@ import pygame as pg
 from ..utils import load_image, MINION_SPRITE, RUNNER_SPRITE, FATMAN_SPRITE
 
 class _Mob(pg.sprite.Sprite):
-    def __init__(self, image_path, damage, speed, attack_rate, cors, path):
+    def __init__(self, image_path, damage, speed, health, cors, path):
         pg.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image(image_path, -1)
         self.damage = damage
         self.speed = speed
-        self.attack_rate = attack_rate
+        self.health = health
         self.x_cor, self.y_cor = cors
         self.path = path
         self.rect.center = cors
@@ -16,13 +16,13 @@ class _Mob(pg.sprite.Sprite):
 
     def update(self):
         reached_destiny = self._next_block_index == len(self.path)
-
         if not reached_destiny:
             next_x, next_y = self.path[self._next_block_index]
 
             if self.x_cor == next_x and self.y_cor == next_y:
                 if self._next_block_index < len(self.path) - 1:
                     self._next_block_index+=1
+                else: self.kill()
                 block_x, block_y = self.path[self._next_block_index]
 
                 current_block_index = self._next_block_index-1
@@ -43,7 +43,7 @@ class _Mob(pg.sprite.Sprite):
 class Minion(_Mob):
     def __init__(self, cors, path):
         self._next_block_index = 0
-        super().__init__(MINION_SPRITE, 1,1,1, cors, path)
+        super().__init__(MINION_SPRITE, 1,1,4, cors, path)
 
     def update(self):
         super().update()
