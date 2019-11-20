@@ -4,19 +4,22 @@ from .bullet import Bullet
 from ..utils import load_image, TURRET_SPRITE, BOMBER_SPRITE, SNIPER_SPRITE
 
 TURRET_ATTRIBUTES = {
-    'damage':     1,
-    'fire_range': 300,
-    'fire_rate':  100
+    'name':       "turret",
+    'damage':      1,
+    'fire_range':  300,
+    'fire_rate':   100
 }
 
 BOMBER_ATTRIBUTES = {
-    'damage':     5,
-    'fire_range': 250,
-    'fire_rate':  50,
+    'name':       "bomber",
+    'damage':      5,
+    'fire_range':  250,
+    'fire_rate':   50,
     'fire_radius': 10
 }
 
 SNIPER_ATTRIBUTES = {
+    'name':      "sniper",
     'damage':     1,
     'fire_range': 500,
     'fire_rate':  75
@@ -34,6 +37,7 @@ class _Tower(pg.sprite.Sprite):
         self.mobs = mobs
         self.target = None
         self.timer = 100
+        self.done = False
 
     def update(self):
         if self.timer == 100:

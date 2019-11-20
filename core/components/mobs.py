@@ -3,18 +3,21 @@ import pygame as pg
 from ..utils import load_image, MINION_SPRITE, RUNNER_SPRITE, FATMAN_SPRITE
 
 MINION_ATTRIBUTES = {
+    'name':  "minion",
     'health': 4,
     'speed' : 1,
     'damage': 1
 }
 
 RUNNER_ATTRIBUTES = {
+    'name':  "runner",
     'health': 2,
     'speed' : 1.5,
     'damage': 0.5
 }
 
 FATMAN_ATTRIBUTES = {
+    'name':  "fatman",
     'health': 8,
     'speed' : 0.3,
     'damage': 2
@@ -28,6 +31,7 @@ class _Mob(pg.sprite.Sprite):
         self.rect.center = cors
         self.path = path
         self._next_block_index = 0
+        self.done = False
 
     def update_attributes(self):
         pass
