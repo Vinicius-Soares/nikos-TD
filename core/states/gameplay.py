@@ -1,9 +1,9 @@
 import pygame as pg
 
 from .. import state_machine
-from ..components import mobs
-from ..components import towers
-from ..utils import PATH_TYPES, TOWERPLACE_SPRITE, load_image
+from ..components import mobs, towers
+from ..tools import load_image
+from ..constants import PATH_TYPES, TOWERPLACE_SPRITE
 
 
 class Gameplay(state_machine._State):

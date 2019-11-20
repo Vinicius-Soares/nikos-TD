@@ -1,9 +1,6 @@
 import os
 import pygame as pg
-
 from pathlib import Path
-from pygame.image import load
-from pygame import error, RLEACCEL
 
 BASE_PATH = Path()
 FONT_PATH = BASE_PATH / 'assets' / 'fonts' / 'Pixeled.ttf'
@@ -51,18 +48,3 @@ COLORS = {
     'begin': (0, 255, 0),
     'end': (255, 0, 0),
 }
-
-
-def load_image(name, colorkey=None):
-    fullname = os.path.join('assets', name)
-    try:
-        image = load(fullname)
-    except error as message:
-        print('Cannot load image:', name)
-        raise SystemExit(message)
-    image = image.convert()
-    if colorkey is not None:
-        if colorkey is -1:
-            colorkey = image.get_at((0, 0))
-        image.set_colorkey(colorkey, RLEACCEL)
-    return image, image.get_rect()

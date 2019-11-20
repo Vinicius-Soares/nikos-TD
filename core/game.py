@@ -1,7 +1,7 @@
 import pygame as pg
 
 from . import state_machine
-from .utils import MODE, TITLE
+from .constants import MODE, TITLE
 
 class Control(object):
     def __init__(self):

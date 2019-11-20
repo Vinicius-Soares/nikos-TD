@@ -1,6 +1,7 @@
 # Inimigos do jogo
 import pygame as pg
-from ..utils import load_image, ENEMY_SPRITES
+from ..tools import load_image
+from ..constants import ENEMY_SPRITES
 
 MINION_ATTRIBUTES = {
     'name':  "minion",

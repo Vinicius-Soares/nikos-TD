@@ -1,7 +1,8 @@
 # Torres do jogo
 import pygame as pg
 from .bullet import Bullet
-from ..utils import load_image, TOWER_SPRITES
+from ..tools import load_image
+from ..constants import TOWER_SPRITES
 
 TURRET_ATTRIBUTES = {
     'name':       "turret",
