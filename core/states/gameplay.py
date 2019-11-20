@@ -49,12 +49,15 @@ class Gameplay(state_machine._State):
         self.last_spawn_time = pg.time.get_ticks()
 
     def get_event(self, event):
-        if event.type == pg.MOUSEBUTTONUP:
+        if event.type == pg.MOUSEBUTTONDOWN:
             x, y = pg.mouse.get_pos()
             for tower_place in self.tower_places:
                 if tower_place.click_on_it(x, y):
-                    print("Click!")
-                    tower_place.set_tower("turret", self.mobs, self.bullets)
+                    print(x, y)
+                    if not tower_place.tower:
+                        print("set")
+                        tower_place.set_tower("turret", self.mobs, self.bullets)
+                        tower_place.selected = True
 
     def update(self, keys, now):
         if pg.time.get_ticks() - self.last_spawn_time >= 1000:
@@ -105,7 +108,6 @@ class EnemyPath(pg.sprite.Sprite):
         self.rect.center = cors
 
 
-
 class TowerPlace(pg.sprite.Sprite):
     def __init__(self, cors):
         super().__init__()
@@ -119,6 +121,8 @@ class TowerPlace(pg.sprite.Sprite):
         if tower_name == "turret":
             tower_rect_center = (self.rect.center[0] + 25, self.rect.center[1] + 25)
             self.tower = towers.Turret(tower_rect_center, mobs, bullets)
+        elif tower_name == "bomber": pass
+        else: pass
 
     def remove_tower(self):
         self.tower = None
