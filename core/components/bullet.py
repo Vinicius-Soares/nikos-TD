@@ -30,4 +30,4 @@ class Bullet(pg.sprite.Sprite):
             self.done = True
 
     def draw(self, surface):
-        if not self.done: surface.blit(self.image, self.rect.center)
+        if not self.done: surface.blit(self.image, self.rect.topleft)

@@ -63,7 +63,7 @@ class _Mob(pg.sprite.Sprite):
                 self.rect.center = (self.x_cor, self.y_cor)
 
     def draw(self, surface):
-        if not self.done: surface.blit(self.image, self.rect.center)
+        if not self.done: surface.blit(self.image, self.rect.topleft)
 
 class Minion(_Mob):
     def __init__(self, level, cors, path):

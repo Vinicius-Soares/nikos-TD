@@ -22,7 +22,6 @@ class Gameplay(state_machine._State):
                           (500, 500))[::-1]
         self.i = 0
         self.money = 100
-        print(self.money)
 
     def startup(self, now, persistant):
         state_machine._State.startup(self, now, persistant)
@@ -41,21 +40,30 @@ class Gameplay(state_machine._State):
         end = EnemyPath("end", self.full_path[-1])
         self.all_sprites.add(end)
 
-        base = TowerPlace((512, 300))
+        base = TowerPlace((562, 350))
         self.tower_places.append(base)
 
+        minion = mobs.Minion(1, self.full_path[0], self.full_path)
+        self.mobs.append(minion)
+
+        self.last_spawn_time = pg.time.get_ticks()
+
     def get_event(self, event):
-        if event.type == pg.MOUSEBUTTONUP:
+        if event.type == pg.MOUSEBUTTONDOWN:
             x, y = pg.mouse.get_pos()
             for tower_place in self.tower_places:
                 if tower_place.click_on_it(x, y):
-                    print("Click!")
-                    tower_place.set_tower("turret", self.mobs, self.bullets)
+                    print(x, y)
+                    if not tower_place.tower:
+                        print("set")
+                        tower_place.set_tower("turret", self.mobs, self.bullets)
+                        tower_place.selected = True
 
     def update(self, keys, now):
-        if(self.i % 150 == 0):
+        if pg.time.get_ticks() - self.last_spawn_time >= 1000:
             minion = mobs.Minion(1, self.full_path[0], self.full_path)
             self.mobs.append(minion)
+            self.last_spawn_time = pg.time.get_ticks()
 
         self.all_sprites.update()
 
@@ -72,7 +80,6 @@ class Gameplay(state_machine._State):
             else:
                 if mob.health <= 0:
                     self.money += mob.reward
-                    print(self.money)
                 self.mobs.remove(mob)
 
         self.i += 1
@@ -99,7 +106,6 @@ class EnemyPath(pg.sprite.Sprite):
         self.image = pg.transform.scale(load_image(PATH_TYPES[path_type], -1)[0], (100, 100))
         self.rect = self.image.get_rect()
         self.rect.center = cors
-    
 
 
 class TowerPlace(pg.sprite.Sprite):
@@ -113,8 +119,9 @@ class TowerPlace(pg.sprite.Sprite):
 
     def set_tower(self, tower_name, mobs, bullets):
         if tower_name == "turret":
-            tower_rect_center = (self.rect.center[0] + 25, self.rect.center[1] + 25)
-            self.tower = towers.Turret(tower_rect_center, mobs, bullets)
+            self.tower = towers.Turret(self.rect.center, mobs, bullets)
+        elif tower_name == "bomber": pass
+        else: pass
 
     def remove_tower(self):
         self.tower = None
@@ -126,6 +133,6 @@ class TowerPlace(pg.sprite.Sprite):
         if self.tower: self.tower.update()
 
     def draw(self, surface):
-        surface.blit(self.image, self.rect.center)
+        surface.blit(self.image, self.rect.topleft)
         if self.tower: self.tower.draw(surface)
         if self.selected: pass

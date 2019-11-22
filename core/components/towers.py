@@ -31,7 +31,7 @@ class _Tower(pg.sprite.Sprite):
     def __init__(self, image_path, cors, mobs, bullets):
         pg.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image(image_path, -1)
-        self.image = pg.transform.scale(self.image, (50,50))
+        self.image = pg.transform.scale(self.image, (50, 50))
         self.rect = self.image.get_rect()
         self.x_cor, self.y_cor = cors
         self.rect.center = cors
@@ -57,7 +57,7 @@ class _Tower(pg.sprite.Sprite):
         self.timer += 1
 
     def draw(self, surface):
-        surface.blit(self.image, self.rect.center)
+        surface.blit(self.image, self.rect.topleft)
 
     def search_target(self):
         pass
