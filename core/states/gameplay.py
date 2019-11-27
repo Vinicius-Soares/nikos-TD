@@ -28,7 +28,6 @@ class Gameplay(state_machine._State):
 
         self.tower_places = []
         self.mobs = []
-        self.bullets = []
 
         begin = EnemyPath("begin", self.full_path[0])
         self.all_sprites.add(begin)
@@ -53,10 +52,8 @@ class Gameplay(state_machine._State):
             x, y = pg.mouse.get_pos()
             for tower_place in self.tower_places:
                 if tower_place.click_on_it(x, y):
-                    print(x, y)
                     if not tower_place.tower:
-                        print("set")
-                        tower_place.set_tower("turret", self.mobs, self.bullets)
+                        tower_place.set_tower("turret", self.mobs)
                         tower_place.selected = True
 
     def update(self, keys, now):
@@ -69,11 +66,6 @@ class Gameplay(state_machine._State):
 
         for tower_place in self.tower_places:
             tower_place.update()
-
-        for bullet in self.bullets:
-            if not bullet.done: bullet.update()
-            else:
-                self.bullets.remove(bullet)
 
         for mob in self.mobs:
             if not mob.done: mob.update()
@@ -91,9 +83,6 @@ class Gameplay(state_machine._State):
 
         for tower_place in self.tower_places:
             tower_place.draw(surface)
-
-        for bullet in self.bullets:
-            bullet.draw(surface)
 
         for mob in self.mobs:
             mob.draw(surface)
@@ -117,9 +106,9 @@ class TowerPlace(pg.sprite.Sprite):
         self.tower = None
         self.selected = False
 
-    def set_tower(self, tower_name, mobs, bullets):
+    def set_tower(self, tower_name, mobs):
         if tower_name == "turret":
-            self.tower = towers.Turret(self.rect.center, mobs, bullets)
+            self.tower = towers.Turret(self.rect.center, mobs)
         elif tower_name == "bomber": pass
         else: pass
 

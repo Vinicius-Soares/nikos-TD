@@ -28,14 +28,14 @@ SNIPER_ATTRIBUTES = {
 
 
 class _Tower(pg.sprite.Sprite):
-    def __init__(self, image_path, cors, mobs, bullets):
+    def __init__(self, image_path, cors, mobs):
         pg.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image(image_path, -1)
         self.image = pg.transform.scale(self.image, (50, 50))
         self.rect = self.image.get_rect()
         self.x_cor, self.y_cor = cors
         self.rect.center = cors
-        self.bullets = bullets
+        self.bullets = []
         self.mobs = mobs
         self.target = None
         self.timer = 100
@@ -56,8 +56,16 @@ class _Tower(pg.sprite.Sprite):
                 self.fire()
         self.timer += 1
 
+        for bullet in self.bullets:
+            if not bullet.done: bullet.update()
+            else:
+                self.bullets.remove(bullet)
+
     def draw(self, surface):
         surface.blit(self.image, self.rect.topleft)
+
+        for bullet in self.bullets:
+            bullet.draw(surface)
 
     def search_target(self):
         pass
@@ -72,8 +80,8 @@ class _Tower(pg.sprite.Sprite):
 
 
 class Turret(_Tower):
-    def __init__(self, cors, mobs, bullets):
-        super().__init__(TOWER_SPRITES["turret"], cors, mobs, bullets)
+    def __init__(self, cors, mobs):
+        super().__init__(TOWER_SPRITES["turret"], cors, mobs)
         self.__dict__.update(TURRET_ATTRIBUTES)
 
     def update(self):

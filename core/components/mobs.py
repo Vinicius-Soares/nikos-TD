@@ -1,5 +1,7 @@
 # Inimigos do jogo
 import pygame as pg
+from random import randint
+
 from ..tools import load_image
 from ..constants import ENEMY_SPRITES
 
@@ -7,24 +9,21 @@ MINION_ATTRIBUTES = {
     'name':  "minion",
     'health': 4,
     'speed' : 1,
-    'damage': 1,
-    'reward': 24
+    'damage': 1
 }
 
 RUNNER_ATTRIBUTES = {
     'name':  "runner",
     'health': 2,
     'speed' : 1.5,
-    'damage': 0.5,
-    'reward': 12
+    'damage': 0.5
 }
 
 FATMAN_ATTRIBUTES = {
     'name':  "fatman",
     'health': 8,
     'speed' : 0.3,
-    'damage': 2,
-    'reward': 50
+    'damage': 2
 }
 
 class _Mob(pg.sprite.Sprite):
@@ -69,6 +68,7 @@ class Minion(_Mob):
     def __init__(self, level, cors, path):
         super().__init__(ENEMY_SPRITES["minion"], cors, path)
         self.__dict__.update(MINION_ATTRIBUTES)
+        self.reward = randint(21, 26)
         self.level = level
         if level > 1: self.update_attributes()
 
@@ -87,6 +87,7 @@ class Runner(_Mob):
     def __init__(self, level, cors, path):
         super().__init__(ENEMY_SPRITES["runner"], cors, path)
         self.__dict__.update(RUNNER_ATTRIBUTES)
+        self.reward = randint(10, 15)
         self.level = level
         if level > 1: self.update_attributes()
 
@@ -102,6 +103,7 @@ class Fatman(_Mob):
     def __init__(self, level, cors, path):
         super().__init__(ENEMY_SPRITES["fatman"], cors, path)
         self.__dict__.update(FATMAN_ATTRIBUTES)
+        self.reward = randint(44, 56)
         self.level = level
         if level > 1: self.update_attributes()
 
