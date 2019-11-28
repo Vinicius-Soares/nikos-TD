@@ -11,6 +11,7 @@ class Control(object):
         self.now = 0.0
         self.keys = pg.key.get_pressed()
         self.state_machine = state_machine.StateMachine()
+        self.fps = 60
 
     def initialize(self):
         pg.init()
@@ -33,6 +34,7 @@ class Control(object):
         if not self.state_machine.state.done:
             self.state_machine.draw(self.screen)
             pg.display.flip()
+        self.clock.tick(self.fps)
 
     def main(self):
         while not self.done:
