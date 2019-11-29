@@ -64,11 +64,9 @@ class Gameplay(state_machine._State):
                 for tower_place in self.tower_places:
                     if tower_place.click_on_it(x, y):
                         self.hud_controller.show_tower_hud(tower_place.tower)
-                        '''
-                        if not tower_place.tower:
-                            tower_place.set_tower("turret", self.mobs)
-                            tower_place.selected = True
-                        '''
+                        tower_place.selected = True
+                        if not tower_place.tower: 
+                            tower_place.set_tower("turret", self.mobs) # Apenas para testes
 
     def update(self, keys, now):
         if pg.time.get_ticks() - self.last_spawn_time >= 2000:
@@ -119,7 +117,13 @@ class HudController():
         self.show = False
 
     def initialize(self, money):
-        pass
+        self.money = money
+
+    def update_money(self, value):
+        # Usado para comprar torres também
+        # Ex: hud_controller.update_money(-cost), 
+        # onde cost é o custo da torre
+        self.money += value
 
     def click_on_match_hud(self, x, y):
         return self.match_hud_rect.collidepoint(x, y)
