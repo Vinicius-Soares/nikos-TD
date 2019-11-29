@@ -1,7 +1,7 @@
 import pygame as pg
 
 from .. import state_machine
-from ..components import map_components, mobs
+from ..components import map_components, mobs, towers
 from ..tools import load_image
 from ..constants import PATH_TYPES, TOWERPLACE_SPRITE
 
@@ -10,16 +10,18 @@ class Gameplay(state_machine._State):
         state_machine._State.__init__(self)
         self.next = "MENU"
         self.all_sprites = pg.sprite.Group()
-        self.full_path = ((96, 96),
-                          (96, 160),
+        self.full_path = ((96, 160),
                           (96, 224),
-                          (160, 224),
-                          (224, 224),
-                          (288, 224),
-                          (352, 224),
-                          (416, 224),
-                          (480, 224))[::-1]
+                          (96, 288),
+                          (160, 288),
+                          (224, 288),
+                          (288, 288),
+                          (352, 288),
+                          (416, 288),
+                          (480, 288))[::-1]
         self.money = 100
+
+        self.hud_controller = HudController()
 
     def startup(self, now, persistant):
         state_machine._State.startup(self, now, persistant)
@@ -49,6 +51,7 @@ class Gameplay(state_machine._State):
         self.tower_places.append(base)
 
         base2 = map_components.TowerPlace((228 + 128, 164))
+        base2.set_tower("turret", self.mobs)
         self.tower_places.append(base2)
 
     def get_event(self, event):
@@ -56,9 +59,13 @@ class Gameplay(state_machine._State):
             x, y = pg.mouse.get_pos()
             for tower_place in self.tower_places:
                 if tower_place.click_on_it(x, y):
+                    self.hud_controller.reset()
+                    self.hud_controller.show_tower_hud(tower_place.tower)
+                    '''
                     if not tower_place.tower:
                         tower_place.set_tower("turret", self.mobs)
                         tower_place.selected = True
+                    '''
 
     def update(self, keys, now):
         if pg.time.get_ticks() - self.last_spawn_time >= 2000:
@@ -77,6 +84,8 @@ class Gameplay(state_machine._State):
                 if mob.health <= 0:
                     self.money += mob.reward
                 self.mobs.remove(mob)
+        
+        self.hud_controller.update(now)
 
     def draw(self, surface):
         surface.fill((0, 0, 0))
@@ -88,3 +97,35 @@ class Gameplay(state_machine._State):
 
         for mob in self.mobs:
             mob.draw(surface)
+
+        self.hud_controller.draw(surface)
+
+
+class HudController():
+    def __init__(self):
+        self.match_hud = pg.Surface((1024, 64))
+        self.tower_hud = pg.Surface((1024, 64 * 4))
+        self.tower_hud_color = 0 # Só pra teste
+        self.show = False
+
+    def reset(self):
+        pass
+
+    def initialize(self, money):
+        pass
+
+    def show_tower_hud(self, tower):
+        print(tower)
+        self.show = True
+        if not tower: self.tower_hud_color = (255, 0, 0)
+        else: self.tower_hud_color = (0, 0, 255)
+
+    def update(self, now):
+        pass
+
+    def draw(self, surface):
+        self.match_hud.fill((0, 255, 0))
+        surface.blit(self.match_hud, (0, 0))
+        if self.show:
+            self.tower_hud.fill(self.tower_hud_color)
+            surface.blit(self.tower_hud, (0, 64 * 8))
