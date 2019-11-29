@@ -57,15 +57,18 @@ class Gameplay(state_machine._State):
     def get_event(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
             x, y = pg.mouse.get_pos()
-            for tower_place in self.tower_places:
-                if tower_place.click_on_it(x, y):
-                    self.hud_controller.reset()
-                    self.hud_controller.show_tower_hud(tower_place.tower)
-                    '''
-                    if not tower_place.tower:
-                        tower_place.set_tower("turret", self.mobs)
-                        tower_place.selected = True
-                    '''
+            click_on_any_hud = self.hud_controller.click_on_match_hud(x, y) or \
+                self.hud_controller.click_on_tower_hud(x, y)
+            if not click_on_any_hud:
+                self.hud_controller.reset()
+                for tower_place in self.tower_places:
+                    if tower_place.click_on_it(x, y):
+                        self.hud_controller.show_tower_hud(tower_place.tower)
+                        '''
+                        if not tower_place.tower:
+                            tower_place.set_tower("turret", self.mobs)
+                            tower_place.selected = True
+                        '''
 
     def update(self, keys, now):
         if pg.time.get_ticks() - self.last_spawn_time >= 2000:
@@ -105,17 +108,26 @@ class HudController():
     def __init__(self):
         self.match_hud = pg.Surface((1024, 64))
         self.tower_hud = pg.Surface((1024, 64 * 4))
+        self.match_hud_rect = self.match_hud.get_rect()
+        self.tower_hud_rect = self.tower_hud.get_rect()
+        self.match_hud_rect.topleft = (0, 0)
+        self.tower_hud_rect.topleft = (0, 64 * 8)
         self.tower_hud_color = 0 # Só pra teste
         self.show = False
 
     def reset(self):
-        pass
+        self.show = False
 
     def initialize(self, money):
         pass
 
+    def click_on_match_hud(self, x, y):
+        return self.match_hud_rect.collidepoint(x, y)
+
+    def click_on_tower_hud(self, x, y):
+        return self.show and self.tower_hud_rect.collidepoint(x, y)
+
     def show_tower_hud(self, tower):
-        print(tower)
         self.show = True
         if not tower: self.tower_hud_color = (255, 0, 0)
         else: self.tower_hud_color = (0, 0, 255)
@@ -125,7 +137,7 @@ class HudController():
 
     def draw(self, surface):
         self.match_hud.fill((0, 255, 0))
-        surface.blit(self.match_hud, (0, 0))
+        surface.blit(self.match_hud, self.match_hud_rect.topleft)
         if self.show:
             self.tower_hud.fill(self.tower_hud_color)
-            surface.blit(self.tower_hud, (0, 64 * 8))
+            surface.blit(self.tower_hud, self.tower_hud_rect.topleft)
