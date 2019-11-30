@@ -1,9 +1,10 @@
 import pygame as pg
 
+from .. import hud_controller
 from .. import state_machine
 from ..components import map_components, mobs, towers
-from ..tools import load_image
 from ..constants import PATH_TYPES, TOWERPLACE_SPRITE
+from ..tools import load_image
 
 class Gameplay(state_machine._State):
     def __init__(self):
@@ -22,7 +23,7 @@ class Gameplay(state_machine._State):
         self.tower_positions = [(x*64-32,y*64-32) for (x,y) in self.tower_positions]
         self.money = 100
 
-        self.hud_controller = HudController()
+        self.hud_controller = hud_controller.HudController()
 
     def startup(self, now, persistant):
         state_machine._State.startup(self, now, persistant)
@@ -57,9 +58,7 @@ class Gameplay(state_machine._State):
     def get_event(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
             x, y = pg.mouse.get_pos()
-            click_on_any_hud = self.hud_controller.click_on_match_hud(x, y) or \
-                self.hud_controller.click_on_tower_hud(x, y)
-            if not click_on_any_hud:
+            if not self.hud_controller.click_on_any_hud(x, y):
                 self.hud_controller.reset()
                 for tower_place in self.tower_places:
                     if tower_place.click_on_it(x, y):
@@ -100,48 +99,3 @@ class Gameplay(state_machine._State):
             mob.draw(surface)
 
         self.hud_controller.draw(surface)
-
-
-class HudController():
-    def __init__(self):
-        self.match_hud = pg.Surface((1024, 64))
-        self.tower_hud = pg.Surface((1024, 64 * 4))
-        self.match_hud_rect = self.match_hud.get_rect()
-        self.tower_hud_rect = self.tower_hud.get_rect()
-        self.match_hud_rect.topleft = (0, 0)
-        self.tower_hud_rect.topleft = (0, 64 * 8)
-        self.tower_hud_color = 0 # Só pra teste
-        self.show = False
-
-    def reset(self):
-        self.show = False
-
-    def initialize(self, money):
-        self.money = money
-
-    def update_money(self, value):
-        # Usado para comprar torres também
-        # Ex: hud_controller.update_money(-cost), 
-        # onde cost é o custo da torre
-        self.money += value
-
-    def click_on_match_hud(self, x, y):
-        return self.match_hud_rect.collidepoint(x, y)
-
-    def click_on_tower_hud(self, x, y):
-        return self.show and self.tower_hud_rect.collidepoint(x, y)
-
-    def show_tower_hud(self, tower):
-        self.show = True
-        if not tower: self.tower_hud_color = (255, 0, 0)
-        else: self.tower_hud_color = (0, 0, 255)
-
-    def update(self, now):
-        pass
-
-    def draw(self, surface):
-        self.match_hud.fill((0, 255, 0))
-        surface.blit(self.match_hud, self.match_hud_rect.topleft)
-        if self.show:
-            self.tower_hud.fill(self.tower_hud_color)
-            surface.blit(self.tower_hud, self.tower_hud_rect.topleft)
