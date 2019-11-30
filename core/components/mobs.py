@@ -53,8 +53,8 @@ class _Mob(pg.sprite.Sprite):
                 current_block_index = self._next_block_index - 1
                 current_block_x, current_block_y = self.path[current_block_index]
 
-                self._dx = (block_x - current_block_x) / (100-self.speed)
-                self._dy = (block_y - current_block_y) / (100-self.speed)
+                self._dx = (block_x - current_block_x) / (60-self.speed)
+                self._dy = (block_y - current_block_y) / (60-self.speed)
 
             else:
                 self.x_cor += int(self._dx)
