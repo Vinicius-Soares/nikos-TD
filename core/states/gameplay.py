@@ -52,7 +52,7 @@ class Gameplay(state_machine._State):
             base = map_components.TowerPlace(coord)
             self.tower_places.append(base)
 
-        self.tower_places[-1].set_tower("turret", self.mobs)
+        self.tower_places[-1].set_tower("turret")
 
     def get_event(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
@@ -66,7 +66,7 @@ class Gameplay(state_machine._State):
                         self.hud_controller.show_tower_hud(tower_place.tower)
                         tower_place.selected = True
                         if not tower_place.tower: 
-                            tower_place.set_tower("turret", self.mobs) # Apenas para testes
+                            tower_place.set_tower("turret") # Apenas para testes
 
     def update(self, keys, now):
         if pg.time.get_ticks() - self.last_spawn_time >= 2000:
@@ -77,7 +77,7 @@ class Gameplay(state_machine._State):
         self.all_sprites.update()
 
         for tower_place in self.tower_places:
-            tower_place.update()
+            tower_place.update(now, self.mobs)
 
         for mob in self.mobs:
             if not mob.done: mob.update()
