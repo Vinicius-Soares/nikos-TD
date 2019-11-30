@@ -10,15 +10,16 @@ class Gameplay(state_machine._State):
         state_machine._State.__init__(self)
         self.next = "MENU"
         self.all_sprites = pg.sprite.Group()
-        self.full_path = ((96, 160),
-                          (96, 224),
-                          (96, 288),
-                          (160, 288),
-                          (224, 288),
-                          (288, 288),
-                          (352, 288),
-                          (416, 288),
-                          (480, 288))[::-1]
+        #self.full_path = ((2, 3),(2, 4),(2, 5),(3, 5),(4, 5),(5, 5),(6, 5),(7, 5),(8, 5))[::-1]
+        self.full_path = ((7, 2), (7, 3), (6, 3), (5, 3), (4, 3), (3, 3), (2, 3),
+                          (2, 4), (2, 5), (2, 6), (2, 7), (3, 7), (4, 7), (5, 7), (5, 6),
+                          (5, 5), (6, 5), (7, 5), (8, 5), (9, 5), (10, 5), (11, 5), (12, 5),
+                          (12, 6), (12, 7), (13, 7), (14, 7), (15, 7), (15, 6), (15, 5),
+                          (15, 4), (15, 3), (14, 3), (13, 3), (12, 3), (11, 3), (10, 3), (10, 2))
+        self.full_path = [(x*64-32,y*64-32) for (x,y) in self.full_path]
+
+        self.tower_positions = ((2, 2),(4, 5),(6, 6), (15, 2),(13, 5),(11, 6))
+        self.tower_positions = [(x*64-32,y*64-32) for (x,y) in self.tower_positions]
         self.money = 100
 
         self.hud_controller = HudController()
@@ -40,19 +41,18 @@ class Gameplay(state_machine._State):
         begin = map_components.EnemyPath("begin", self.full_path[0])
         self.all_sprites.add(begin)
 
-        for i in range(7):
+        for i in range(len(self.full_path)-2):
             path = map_components.EnemyPath("enemy", self.full_path[i+1])
             self.all_sprites.add(path)
 
         end = map_components.EnemyPath("end", self.full_path[-1])
         self.all_sprites.add(end)
 
-        base = map_components.TowerPlace((224, 160))
-        self.tower_places.append(base)
+        for coord in self.tower_positions:
+            base = map_components.TowerPlace(coord)
+            self.tower_places.append(base)
 
-        base2 = map_components.TowerPlace((228 + 128, 164))
-        base2.set_tower("turret", self.mobs)
-        self.tower_places.append(base2)
+        self.tower_places[-1].set_tower("turret", self.mobs)
 
     def get_event(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
