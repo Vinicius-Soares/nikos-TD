@@ -1,6 +1,7 @@
 # Torres do jogo
-import pygame as pg
+import enum
 import math
+import pygame as pg
 
 from .bullet import Bullet
 from ..tools import load_image
@@ -29,6 +30,12 @@ SNIPER_ATTRIBUTES = {
 }
 
 
+class TowerBehavior(enum.Enum):
+    RANDOM = 1
+    FIRST = 2
+    STRONG = 3
+    WEAK = 4
+
 class _Tower(pg.sprite.Sprite):
     def __init__(self, image_path, cors):
         pg.sprite.Sprite.__init__(self)
@@ -41,23 +48,9 @@ class _Tower(pg.sprite.Sprite):
         self.target = None
         self.done = False
         self.last_bullet_time = pg.time.get_ticks()
+        self.behavior = TowerBehavior.FIRST
 
     def update(self, now, mobs):
-        '''
-        if self.timer == 100:
-            self.timer = 0
-            if self.target:
-                if not self.is_in_range(self.target) or self.target.health <= 0:
-                    self.target = None
-            mob_index = 0
-            while mob_index < len(self.mobs) and self.target is None:
-                if self.is_in_range(self.mobs[mob_index]):
-                    self.target = self.mobs[mob_index]
-                mob_index += 1
-            if self.target:
-                self.fire()
-        self.timer += 1
-        '''
         self.search_target(mobs)
         if self.target and \
             now - self.last_bullet_time >= (1 / self.fire_rate) * 1000:
@@ -76,13 +69,14 @@ class _Tower(pg.sprite.Sprite):
             bullet.draw(surface)
 
     def search_target(self, mobs):
-        '''
-            Lógica de FIRST
-        '''
-        for mob in mobs:
-            if self.is_in_range(mob):
-                self.target = mob
-                break
+        if self.behavior == TowerBehavior.RANDOM: pass
+        elif self.behavior == TowerBehavior.FIRST:
+            for mob in mobs:
+                if self.is_in_range(mob):
+                    self.target = mob
+                    break
+        elif self.behavior == TowerBehavior.STRONG: pass
+        else: pass
 
     def fire(self):
         new_bullet = Bullet((self.x_cor, self.y_cor), self.target, 2)
@@ -106,8 +100,8 @@ class Turret(_Tower):
 
 
 class Bomber(_Tower):
-    def __init__(self, cors, mobs):
-        super().__init__(TOWER_SPRITES["bomber"], cors, [], [])
+    def __init__(self, cors):
+        super().__init__(TOWER_SPRITES["bomber"], cors)
         self.__dict__.update(BOMBER_ATTRIBUTES)
 
     def update(self):
@@ -118,8 +112,8 @@ class Bomber(_Tower):
 
 
 class Sniper(_Tower):
-    def __init__(self, cors, mobs):
-        super().__init__(TOWER_SPRITES["sniper"], cors, [], [])
+    def __init__(self, cors):
+        super().__init__(TOWER_SPRITES["sniper"], cors)
         self.__dict__.update(SNIPER_ATTRIBUTES)
 
     def update(self):
