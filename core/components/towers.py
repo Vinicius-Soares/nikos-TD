@@ -11,7 +11,8 @@ TURRET_ATTRIBUTES = {
     'name':       "turret",
     'damage':      1,
     'fire_range':  300,
-    'fire_rate':   0.6
+    'fire_rate':   0.6,
+    'bullet_speed': 0.8
 }
 
 BOMBER_ATTRIBUTES = {
@@ -26,7 +27,8 @@ SNIPER_ATTRIBUTES = {
     'name':      "sniper",
     'damage':     1,
     'fire_range': 500,
-    'fire_rate':  75
+    'fire_rate':  75,
+    'bullet_speed': 1.3
 }
 
 
@@ -79,7 +81,7 @@ class _Tower(pg.sprite.Sprite):
         else: pass
 
     def fire(self):
-        new_bullet = Bullet((self.x_cor, self.y_cor), self.target, 2)
+        new_bullet = Bullet((self.x_cor, self.y_cor), self.target, self.bullet_speed)
         self.bullets.append(new_bullet)
 
     def is_in_range(self, mob):
