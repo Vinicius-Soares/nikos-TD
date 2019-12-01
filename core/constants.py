@@ -3,7 +3,7 @@ import pygame as pg
 from pathlib import Path
 
 BASE_PATH = Path()
-FONT_PATH = BASE_PATH / 'assets' / 'fonts' / 'Pixeled.ttf'
+FONT_PATH = BASE_PATH / "assets" / "fonts" / "Pixeled.ttf"
 
 WIDTH = 1024
 HEIGHT = 768
@@ -43,6 +43,11 @@ BULLET_SPRITES = {
     "turret": SPRITE_PATH / "bullet_turret.png",
     "bomber": SPRITE_PATH / "bullet_bomber.png",
     "sniper": SPRITE_PATH / "bullet_sniper.png"
+}
+
+HUD_SPRITES = {
+    "health": SPRITE_PATH / "health.png",
+    "coin": SPRITE_PATH / "coin.png"
 }
 
 COLORS = {
