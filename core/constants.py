@@ -10,7 +10,15 @@ HEIGHT = 768
 MODE = (WIDTH, HEIGHT)
 TITLE = "Niko's Tower Defense"
 
-SPRITE_PATH = BASE_PATH / 'sprites'
+SPRITE_PATH = BASE_PATH / "sprites"
+
+BACKGROUNDS = {
+    "menu" : SPRITE_PATH / "background.png",
+    "credits" : SPRITE_PATH / "background.png",
+    "gameplay" : SPRITE_PATH / "background.png",
+    "gameover" : SPRITE_PATH / "background.png"
+}
+
 PATH_TYPES = {
     "begin": SPRITE_PATH / "begin.png",
     "end": SPRITE_PATH / "end.png",

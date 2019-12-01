@@ -3,7 +3,7 @@ import pygame as pg
 from .. import hud_controller
 from .. import state_machine
 from ..components import map_components, mobs, towers
-from ..constants import PATH_TYPES, TOWERPLACE_SPRITE
+from ..constants import PATH_TYPES, TOWERPLACE_SPRITE, BACKGROUNDS, MODE
 from ..tools import load_image
 
 class Gameplay(state_machine._State):
@@ -27,6 +27,11 @@ class Gameplay(state_machine._State):
 
     def startup(self, now, persistant):
         state_machine._State.startup(self, now, persistant)
+
+        background = pg.sprite.Sprite()
+        background.image = pg.transform.scale(load_image(BACKGROUNDS["gameplay"], -1)[0], MODE)
+        background.rect = background.image.get_rect()
+        self.all_sprites.add(background)
 
         self.tower_places = []
         self.mobs = []
