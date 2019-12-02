@@ -12,9 +12,6 @@ class HudController(object):
     def reset(self):
         self.tower_hud.reset()
 
-    def initialize(self, money):
-        self.match_hud.update_money(money)
-
     def click_on_any_hud(self, x, y):
         return self.match_hud.click_on_it(x, y) or \
             self.tower_hud.click_on_it(x, y)
@@ -25,9 +22,9 @@ class HudController(object):
     def get_event(self, event):
         self.tower_hud.get_event(event)
 
-    def update(self, now):
-        self.match_hud.update(now)
-        self.tower_hud.update(now)
+    def update(self, now, life, money):
+        self.match_hud.update(now, life, money)
+        self.tower_hud.update(now, life, money)
 
     def draw(self, surface):
         self.match_hud.draw(surface)
@@ -52,8 +49,6 @@ class _Hud(object):
 class MatchHud(_Hud):
     def __init__(self):
         super().__init__()
-        self.life = 100
-        self.money = 0
         self.time = "00:00"
         self.initialize_sprites()
 
@@ -64,12 +59,6 @@ class MatchHud(_Hud):
     def time_x_position(self):
         number_of_letters = len(self.time)
         return (WIDTH / 2) - (number_of_letters // 2 * 16)
-
-    def update_money(self, value):
-        # Usado para comprar torres também
-        # Ex: hud_controller.update_money(-cost), 
-        # onde cost é o custo da torre
-        self.money += value
     
     def update_time(self, now):
         seconds = now // 1000
@@ -80,8 +69,10 @@ class MatchHud(_Hud):
     def click_on_it(self, x, y):
         return super().click_on_it(x, y)
 
-    def update(self, now):
+    def update(self, now, life, money):
         super().update(now)
+        self.life = life
+        self.money = money
         self.life_text = self.font.render(repr(self.life), 0, COLORS["white"])
         self.money_text = self.font.render(repr(self.money), 0, COLORS["white"])
         self.update_time(now)
@@ -103,6 +94,7 @@ class TowerHud(_Hud):
         self.screen_rect.topleft = (0, 64 * 8)
         self.show = False
         self.tower = None
+        self.initialize_tower_buttons()
 
     def initialize_tower_buttons(self):
         self.turret_button = ui.Button(10, 10, "Turret")
@@ -111,21 +103,32 @@ class TowerHud(_Hud):
 
     def reset(self):
         self.show = False
+        self.screen = pg.transform.scale(load_image(HUD_SPRITES["background"], 0)[0], (1024, 64 * 4))
 
     def set_tower(self, tower):
         self.show = True
         self.tower = tower
-        self.color = (255, 0, 0) if self.tower else (0, 0, 255)
         
     def click_on_it(self, x, y):
         return self.show and self.screen_rect.collidepoint(x, y)
 
     def get_event(self, event):
-        print(pg.mouse.get_pos())
+        pass
 
-    def update(self, now):
+    def update(self, now, life, money):
         super().update(now)
 
     def draw(self, surface):
         if self.show: 
             surface.blit(self.screen, self.screen_rect.topleft)
+            if not self.tower:
+                self.draw_select_tower(self.screen)
+            else:
+                self.draw_upgrade_tower(self.screen)
+
+    def draw_select_tower(self, surface):
+        self.screen.blit(self.font.render("Towers", 0, COLORS["white"]), (35, 10))
+        self.turret_button.draw(self.screen)
+
+    def draw_upgrade_tower(self, surface):
+        pass

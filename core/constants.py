@@ -47,6 +47,7 @@ BULLET_SPRITES = {
 
 HUD_SPRITES = {
     "background": SPRITE_PATH / "background_hud.png",
+    "button": SPRITE_PATH / "button.png",
     "health": SPRITE_PATH / "health.png",
     "coin": SPRITE_PATH / "coin.png"
 }

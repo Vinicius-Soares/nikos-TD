@@ -21,6 +21,8 @@ class Gameplay(state_machine._State):
 
         self.tower_positions = ((2, 2),(4, 5),(6, 6), (15, 2),(13, 5),(11, 6))
         self.tower_positions = [(x*64-32,y*64-32) for (x,y) in self.tower_positions]
+
+        self.life = 100
         self.money = 100
 
         self.background = pg.transform.scale(load_image(BACKGROUNDS["gameplay"], -1)[0], MODE)
@@ -28,11 +30,6 @@ class Gameplay(state_machine._State):
 
     def startup(self, now, persistant):
         state_machine._State.startup(self, now, persistant)
-
-        background = pg.sprite.Sprite()
-        background.image = pg.transform.scale(load_image(BACKGROUNDS["gameplay"], -1)[0], MODE)
-        background.rect = background.image.get_rect()
-        self.all_sprites.add(background)
 
         self.tower_places = []
         self.mobs = []
@@ -93,7 +90,7 @@ class Gameplay(state_machine._State):
                     self.money += mob.reward
                 self.mobs.remove(mob)
         
-        self.hud_controller.update(now)
+        self.hud_controller.update(now, self.life, self.money)
 
     def draw(self, surface):
         surface.blit(self.background, (0, 0))
