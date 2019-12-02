@@ -8,7 +8,7 @@ class Credits(state_machine._State):
         state_machine._State.__init__(self)
         self.next = "MENU"
         self.font = pg.font.Font(None, 50)
-        self.text = self.font.render("Universidade Estadual do Amazonas", True, (0, 128, 0))
+        self.text = self.font.render("Universidade Estadual do Amazonas", True, (128, 255, 0))
 
     def get_event(self, event):
         if event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
@@ -18,5 +18,5 @@ class Credits(state_machine._State):
         pass
 
     def draw(self, surface):
-        surface.fill((255, 255, 255))
+        surface.fill((128, 128, 128))
         surface.blit(self.text, (50, 50))
