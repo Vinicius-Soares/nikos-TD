@@ -5,7 +5,7 @@ from ..constants import BULLET_SPRITES
 class Bullet(pg.sprite.Sprite):
     def __init__(self, cors, target, speed):
         super().__init__()
-        self.image = pg.transform.scale(load_image(BULLET_SPRITES["turret"], -1)[0], (50,50))
+        self.image = pg.transform.scale(load_image(BULLET_SPRITES["turret"], -1)[0], (7, 7))
         self.rect = self.image.get_rect()
         self.rect.center = cors
         self.origin = cors

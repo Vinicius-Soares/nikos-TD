@@ -23,6 +23,7 @@ class Gameplay(state_machine._State):
         self.tower_positions = [(x*64-32,y*64-32) for (x,y) in self.tower_positions]
         self.money = 100
 
+        self.background = pg.transform.scale(load_image(BACKGROUNDS["gameplay"], -1)[0], MODE)
         self.hud_controller = hud_controller.HudController()
 
     def startup(self, now, persistant):
@@ -71,6 +72,8 @@ class Gameplay(state_machine._State):
                         tower_place.selected = True
                         if not tower_place.tower: 
                             tower_place.set_tower("turret") # Apenas para testes
+            else:
+                self.hud_controller.get_event(event)
 
     def update(self, keys, now):
         if pg.time.get_ticks() - self.last_spawn_time >= 2000:
@@ -93,7 +96,7 @@ class Gameplay(state_machine._State):
         self.hud_controller.update(now)
 
     def draw(self, surface):
-        surface.fill((0, 0, 0))
+        surface.blit(self.background, (0, 0))
 
         self.all_sprites.draw(surface)
 

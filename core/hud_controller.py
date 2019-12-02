@@ -1,5 +1,6 @@
 import pygame as pg
 
+from .components import ui
 from .constants import COLORS, FONT_PATH, HUD_SPRITES, WIDTH
 from .tools import load_image
 
@@ -21,6 +22,9 @@ class HudController(object):
     def show_tower_hud(self, tower):
         self.tower_hud.set_tower(tower)
 
+    def get_event(self, event):
+        self.tower_hud.get_event(event)
+
     def update(self, now):
         self.match_hud.update(now)
         self.tower_hud.update(now)
@@ -31,43 +35,31 @@ class HudController(object):
 
 
 class _Hud(object):
-    def __init__(self, x, y, width, length):
-        self.screen = pg.Surface((width, length))
-        self.screen_rect = self.screen.get_rect()
-        self.screen_rect.topleft = (x, y)
-        self.font = pg.font.Font(None, 64)
-        self.color = 0
+    def __init__(self):
+        self.font = pg.font.Font(FONT_PATH.as_posix(), 24)
         self.done = False
 
     def click_on_it(self, x, y):
-        return self.screen_rect.collidepoint(x, y)
+        pass
 
     def update(self, now):
         pass
 
     def draw(self, surface):
-        if not self.done:
-            self.screen.fill(self.color)
-            surface.blit(self.screen, self.screen_rect.topleft)
+        pass
 
 
 class MatchHud(_Hud):
     def __init__(self):
-        super().__init__(0, 0, 1024, 64)
-        self.color = (255, 255, 255)
+        super().__init__()
         self.life = 100
         self.money = 0
         self.time = "00:00"
         self.initialize_sprites()
 
-    def initialize_texts(self):
-        self.life_text = self.font.render(repr(self.life), 0, (0, 0, 0))
-        self.money_text = self.font.render(repr(self.money), 0, (0, 0, 0))
-        self.time_text = self.font.render(self.time, 0, (0, 0, 0))
-
     def initialize_sprites(self):
-        self.life_image = pg.transform.scale(load_image(HUD_SPRITES["health"])[0], (48, 48))
-        self.money_image = load_image(HUD_SPRITES["coin"])[0]
+        self.life_image = pg.transform.scale(load_image(HUD_SPRITES["health"], -1)[0], (48, 48))
+        self.money_image = pg.transform.scale(load_image(HUD_SPRITES["coin"], -1)[0], (48, 48))
 
     def time_x_position(self):
         number_of_letters = len(self.time)
@@ -90,24 +82,32 @@ class MatchHud(_Hud):
 
     def update(self, now):
         super().update(now)
-        self.life_text = self.font.render(repr(self.life), 0, (0, 0, 0))
-        self.money_text = self.font.render(repr(self.money), 0, (0, 0, 0))
+        self.life_text = self.font.render(repr(self.life), 0, COLORS["white"])
+        self.money_text = self.font.render(repr(self.money), 0, COLORS["white"])
         self.update_time(now)
-        self.time_text = self.font.render(self.time, 0, (0, 0, 0))
+        self.time_text = self.font.render(self.time, 0, COLORS["white"])
 
     def draw(self, surface):
-        super().draw(surface)
         surface.blit(self.life_image, (10, 10))
-        # surface.blit(self.life_text, (10, 10))
-        # surface.blit(self.money_text, (120, 10))
-        # surface.blit(self.time_text, (self.time_x_position(), 10))
+        surface.blit(self.life_text, (65, -7))
+        surface.blit(self.money_image, (160, 8))
+        surface.blit(self.money_text, (215, -7))
+        surface.blit(self.time_text, (self.time_x_position(), -7))
 
 
 class TowerHud(_Hud):
     def __init__(self):
-        super().__init__(0, 64 * 8, 1024, 64 * 4)
+        super().__init__()
+        self.screen = pg.transform.scale(load_image(HUD_SPRITES["background"], 0)[0], (1024, 64 * 4))
+        self.screen_rect = self.screen.get_rect()
+        self.screen_rect.topleft = (0, 64 * 8)
         self.show = False
         self.tower = None
+
+    def initialize_tower_buttons(self):
+        self.turret_button = ui.Button(10, 10, "Turret")
+        self.bomber_button = ui.Button(100, 100, "Bomber")
+        self.sniper_button = ui.Button(200, 200, "Sniper")
 
     def reset(self):
         self.show = False
@@ -118,11 +118,14 @@ class TowerHud(_Hud):
         self.color = (255, 0, 0) if self.tower else (0, 0, 255)
         
     def click_on_it(self, x, y):
-        return self.show and super().click_on_it(x, y)
+        return self.show and self.screen_rect.collidepoint(x, y)
+
+    def get_event(self, event):
+        print(pg.mouse.get_pos())
 
     def update(self, now):
         super().update(now)
 
     def draw(self, surface):
         if self.show: 
-            super().draw(surface)
+            surface.blit(self.screen, self.screen_rect.topleft)
