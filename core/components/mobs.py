@@ -15,7 +15,7 @@ MINION_ATTRIBUTES = {
 RUNNER_ATTRIBUTES = {
     'name':  "runner",
     'health': 10,
-    'speed' : 3,
+    'speed' : 2,
     'damage': 0.5
 }
 

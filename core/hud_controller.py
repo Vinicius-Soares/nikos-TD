@@ -25,8 +25,8 @@ class HudController(object):
     def get_event(self, event):
         self.tower_hud.get_event(event)
 
-    def update(self, now):
-        self.match_hud.update(now)
+    def update(self, now, money, life):
+        self.match_hud.update(now, money, life)
         self.tower_hud.update(now)
 
     def draw(self, surface):
@@ -80,10 +80,10 @@ class MatchHud(_Hud):
     def click_on_it(self, x, y):
         return super().click_on_it(x, y)
 
-    def update(self, now):
+    def update(self, now, money, life):
         super().update(now)
-        self.life_text = self.font.render(repr(self.life), 0, COLORS["white"])
-        self.money_text = self.font.render(repr(self.money), 0, COLORS["white"])
+        self.life_text = self.font.render(repr(life), 0, COLORS["white"])
+        self.money_text = self.font.render(repr(money), 0, COLORS["white"])
         self.update_time(now)
         self.time_text = self.font.render(self.time, 0, COLORS["white"])
 
