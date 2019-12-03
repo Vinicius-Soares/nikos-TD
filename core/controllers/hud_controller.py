@@ -10,26 +10,23 @@ class HudController(object):
     def __init__(self):
         self.match_hud = MatchHud()
         self.tower_select_hud = TowerHud()
+        self.tower_details_hud = None
         self.selected_tower_place = None
 
     def reset(self):
-        self.tower_hud = TowerHud()
-
-    def click_on_any_hud(self, x, y):
-        return self.match_hud.click_on_it(x, y) or \
-            self.tower_select_hud.click_on_it(x, y)
+        self.tower_select_hud = TowerHud()
 
     def show_tower_select_hud(self, tower_place):
         self.selected_tower_place = tower_place
         self.tower_select_hud.show = True
 
-    def show_upgrade_tower_hud(self, tower):
-        pass
+    def show_tower_details_hud(self, tower):
+        print("OK")
 
     def close_tower_select_hud(self):
         self.tower_select_hud = TowerHud()
 
-    def close_upgrade_hud(self):
+    def close_tower_details_hud(self):
         self.upgrade_hud = None
 
 class MatchHud():
@@ -85,8 +82,8 @@ class TowerHud():
     def click_on_it(self, x, y):
         return self.show and self.screen_rect.collidepoint(x, y)
 
-    def get_event(self, event):
-        pass
+    def get_click_event_pos(self, x, y):
+        print(x, y)
 
     def update(self, now, money):
         self.money = money

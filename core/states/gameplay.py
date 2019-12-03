@@ -57,32 +57,33 @@ class Gameplay(state_machine._State):
     def get_event(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
             x, y = pg.mouse.get_pos()
-            if not self.hud_controller.click_on_any_hud(x, y):
+            if self.hud_controller.tower_select_hud.click_on_it(x, y):
+                self.hud_controller.tower_select_hud.get_click_event_pos(x, y)
+            #elif self.hud_controller.tower_details_hud.click_on_it(x, y):
+            else:
                 self.hud_controller.close_tower_select_hud()
-                self.hud_controller.close_upgrade_hud()
+                self.hud_controller.close_tower_details_hud()
                 for tower_place in self.tower_places:
                     if tower_place.click_on_it(x, y):
                         if not tower_place.tower:
                             self.hud_controller.show_tower_select_hud(tower_place)
                             tower_place.selected = True
                         else:
-                            self.hud_controller.show_upgrade_tower_hud(tower_place.tower)
+                            self.hud_controller.show_tower_details_hud(tower_place.tower)
                         '''
                             Para testes
                         '''
                         if not tower_place.tower: 
                             tower_place.set_tower("turret")
-            else: 
-                pass
-                '''
-                self.hud_controller.get_event(event)
-                if self.hud_controller.tower_hud.done:
-                    selected_tower = self.hud_controller.tower_hud.selected_tower
-                    tower_name = selected_tower.name
-                    tower_cost = selected_tower.cost
-                    self.hud_controller.selected_tower_place.set_tower(tower_name)
-                    self.money -= tower_cost
-                '''
+                        '''
+                        self.hud_controller.get_event(event)
+                        if self.hud_controller.tower_hud.done:
+                            selected_tower = self.hud_controller.tower_hud.selected_tower
+                            tower_name = selected_tower.name
+                            tower_cost = selected_tower.cost
+                            self.hud_controller.selected_tower_place.set_tower(tower_name)
+                            self.money -= tower_cost
+                        '''
 
     def update(self, keys, now):
         if self.life == 0:

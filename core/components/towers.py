@@ -12,7 +12,7 @@ from ..tools import load_image
 TURRET_ATTRIBUTES = {
     'name':       "turret",
     'damage':      2,
-    'fire_range':  300,
+    'fire_range':  125,
     'fire_rate':   1.6,
     'bullet_speed': 6,
     'cost': 100
@@ -55,18 +55,18 @@ class _Tower(pg.sprite.Sprite):
         self.target = None
         self.done = False
         self.last_bullet_time = pg.time.get_ticks()
-        self.behavior = TowerBehavior.STRONG
+        self.behavior = TowerBehavior.RANDOM
 
-    def is_in_range(self, mob):
-        return self.position.distance_to(mob.position) < self.fire_range
+    def is_in_range(self, obj):
+        return self.position.distance_to(obj.position) < self.fire_range
 
     def search_target(self, mobs):
-        if self.behavior == TowerBehavior.RANDOM and not self.target:
+        if self.behavior == TowerBehavior.FIRST:
+            self.target = mobs[0]
+        elif self.behavior == TowerBehavior.RANDOM:
             mobs_length = len(mobs)
             random_index = random.randint(0, mobs_length - 1)
             self.target = mobs[random_index]
-        elif self.behavior == TowerBehavior.FIRST:
-            self.target = mobs[0]
         elif self.behavior == TowerBehavior.STRONG:
             stronger = mobs[0]
             health = mobs[0].health
@@ -98,9 +98,13 @@ class _Tower(pg.sprite.Sprite):
                 self.fire()
                 self.last_bullet_time = now
 
-            if self.target.done: self.target = None
+            if self.target.done or \
+                not self.is_in_range(self.target): self.target = None
 
         for bullet in self.bullets:
+            if not self.is_in_range(bullet):
+                bullet.done = True
+
             if not bullet.done: bullet.update()
             else:
                 self.bullets.remove(bullet)
