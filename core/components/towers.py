@@ -10,7 +10,7 @@ from ..constants import TOWER_SPRITES
 
 TURRET_ATTRIBUTES = {
     'name':       "turret",
-    'damage':      2,
+    'damage':      10,
     'fire_range':  300,
     'fire_rate':   1.6,
     'bullet_speed': 6
@@ -62,7 +62,7 @@ class _Tower(pg.sprite.Sprite):
             random_index = random.randint(0, mobs_length - 1)
             self.target = mobs[random_index]
         elif self.behavior == TowerBehavior.FIRST:
-            self.target = mob[0]
+            self.target = mobs[0]
         elif self.behavior == TowerBehavior.STRONG: pass
         else: pass
 
@@ -73,12 +73,12 @@ class _Tower(pg.sprite.Sprite):
     def update(self, now, mobs):
         if not self.target:
             mobs_in_range = [mob for mob in mobs if self.is_in_range(mob)]
-            self.search_target(mobs_in_range)
+            if len(mobs_in_range) > 0: self.search_target(mobs_in_range)
         else:
             if now - self.last_bullet_time >= (1 / self.fire_rate) * 1000:
                 self.fire()
                 self.last_bullet_time = now
-                
+
             if self.target.done: self.target = None
 
         for bullet in self.bullets:
