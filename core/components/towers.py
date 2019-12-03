@@ -6,7 +6,7 @@ import random
 
 from .bullet import Bullet
 from ..tools import load_image
-from ..constants import TOWER_SPRITES
+from ..constants import SOUNDS, TOWER_SPRITES
 
 TURRET_ATTRIBUTES = {
     'name':       "turret",
@@ -52,6 +52,7 @@ class _Tower(pg.sprite.Sprite):
         self.done = False
         self.last_bullet_time = pg.time.get_ticks()
         self.behavior = TowerBehavior.STRONG
+        self.shot_sound = pg.mixer.Sound(SOUNDS["shot_1"].as_posix())
 
     def is_in_range(self, mob):
         return self.position.distance_to(mob.position) < self.fire_range
@@ -83,6 +84,7 @@ class _Tower(pg.sprite.Sprite):
     def fire(self):
         new_bullet = Bullet(self.position, self.target, self.damage, self.bullet_speed)
         self.bullets.append(new_bullet)
+        self.shot_sound.play()
 
     def update(self, now, mobs):
         if not self.target:
