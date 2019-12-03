@@ -10,7 +10,7 @@ from ..constants import TOWER_SPRITES
 
 TURRET_ATTRIBUTES = {
     'name':       "turret",
-    'damage':      10,
+    'damage':      2,
     'fire_range':  300,
     'fire_rate':   1.6,
     'bullet_speed': 6
@@ -51,7 +51,7 @@ class _Tower(pg.sprite.Sprite):
         self.target = None
         self.done = False
         self.last_bullet_time = pg.time.get_ticks()
-        self.behavior = TowerBehavior.RANDOM
+        self.behavior = TowerBehavior.STRONG
 
     def is_in_range(self, mob):
         return self.position.distance_to(mob.position) < self.fire_range
@@ -63,8 +63,22 @@ class _Tower(pg.sprite.Sprite):
             self.target = mobs[random_index]
         elif self.behavior == TowerBehavior.FIRST:
             self.target = mobs[0]
-        elif self.behavior == TowerBehavior.STRONG: pass
-        else: pass
+        elif self.behavior == TowerBehavior.STRONG:
+            stronger = mobs[0]
+            health = mobs[0].health
+            for mob in mobs[1:]:
+                if mob.health > health:
+                    health = mob.health
+                    stronger = mob
+            self.target = stronger
+        else:
+            weaker = mobs[0]
+            health = mobs[0].health
+            for mob in mobs[1:]:
+                if mob.health < health:
+                    health = mob.health
+                    weaker = mob
+            self.target = weaker
 
     def fire(self):
         new_bullet = Bullet(self.position, self.target, self.damage, self.bullet_speed)
