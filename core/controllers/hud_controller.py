@@ -1,8 +1,8 @@
 import pygame as pg
 
-from .components import ui
-from .constants import COLORS, FONT_PATH, HUD_SPRITES, WIDTH
-from .tools import load_image
+from ..components import ui
+from ..constants import COLORS, FONT_PATH, HUD_SPRITES, WIDTH
+from ..tools import load_image
 
 class HudController(object):
     def __init__(self):

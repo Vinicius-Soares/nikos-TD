@@ -1,8 +1,8 @@
 import pygame as pg
 
-from .. import hud_controller
 from .. import state_machine
 from ..components import map_components, mobs, towers
+from ..controllers import hud_controller as hc
 from ..constants import PATH_TYPES, TOWERPLACE_SPRITE, BACKGROUNDS, MODE
 from ..tools import load_image
 
@@ -26,7 +26,7 @@ class Gameplay(state_machine._State):
         self.money = 100
 
         self.background = pg.transform.scale(load_image(BACKGROUNDS["gameplay"], -1)[0], MODE)
-        self.hud_controller = hud_controller.HudController()
+        self.hud_controller = hc.HudController()
 
     def startup(self, now, persistant):
         state_machine._State.startup(self, now, persistant)
@@ -74,7 +74,7 @@ class Gameplay(state_machine._State):
 
     def update(self, keys, now):
         if pg.time.get_ticks() - self.last_spawn_time >= 2000:
-            minion = mobs.Minion(1, self.full_path[0], self.full_path)
+            minion = mobs.Fatman(1, self.full_path[0], self.full_path)
             self.mobs.append(minion)
             self.last_spawn_time = pg.time.get_ticks()
 

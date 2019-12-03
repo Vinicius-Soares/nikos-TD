@@ -22,7 +22,7 @@ BACKGROUNDS = {
 
 SOUNDS = {
     "mob_death": SOUND_PATH / "mob_death.wav",
-    "shot_1": SOUND_PATH / "shot_1.wav"
+    "turret_shot": SOUND_PATH / "turret_shot.wav"
 }
 
 PATH_TYPES = {

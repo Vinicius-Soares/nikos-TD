@@ -16,7 +16,7 @@ RUNNER_ATTRIBUTES = {
     'name':  "runner",
     'health': 10,
     'speed' : 3,
-    'damage': 0.5
+    'damage': 1
 }
 
 FATMAN_ATTRIBUTES = {
