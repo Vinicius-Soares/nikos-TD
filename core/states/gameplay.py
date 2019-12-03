@@ -29,11 +29,6 @@ class Gameplay(state_machine._State):
     def startup(self, now, persistant):
         state_machine._State.startup(self, now, persistant)
 
-        background = pg.sprite.Sprite()
-        background.image = pg.transform.scale(load_image(BACKGROUNDS["gameplay"], -1)[0], MODE)
-        background.rect = background.image.get_rect()
-        self.all_sprites.add(background)
-
         self.tower_places = []
         self.mobs = []
 
@@ -59,7 +54,7 @@ class Gameplay(state_machine._State):
             base = map_components.TowerPlace(coord)
             self.tower_places.append(base)
 
-        self.tower_places[-1].set_tower("turret")
+        self.tower_places[1].set_tower("turret")
 
     def get_event(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:

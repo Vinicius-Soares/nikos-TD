@@ -1,4 +1,5 @@
 import pygame as pg
+from math import atan2, degrees, cos, sin, pi
 from ..tools import load_image
 from ..constants import BULLET_SPRITES
 
@@ -9,20 +10,18 @@ class Bullet(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = cors
         self.origin = cors
-        self.x_cor, self.y_cor = cors
+        self.position = pg.Vector2(cors)
         self.target = target
         self.speed= speed
         self.damage = 2
         self.done = False
 
     def update(self):
-        self._dx = ((self.target.x_cor-self.x_cor) * self.speed) / 10
-        self._dy = ((self.target.y_cor-self.y_cor) * self.speed) / 10
+        position_target = pg.Vector2(self.target.x_cor, self.target.y_cor)
 
-        self.x_cor += self._dx
-        self.y_cor += self._dy
+        self.position += (position_target - self.position).normalize() * 4
 
-        self.rect.center = (self.x_cor, self.y_cor)
+        self.rect.center = self.position
         hit_target = self.rect.colliderect(self.target.rect)
         if hit_target:
             self.target.health -= self.damage
