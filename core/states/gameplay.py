@@ -21,8 +21,7 @@ class Gameplay(state_machine._State):
 
         self.tower_positions = ((2, 2),(4, 5),(6, 6), (15, 2),(13, 5),(11, 6))
         self.tower_positions = [(x*64-32,y*64-32) for (x,y) in self.tower_positions]
-
-        self.life = 100
+        self.life = 5
         self.money = 100
 
         self.background = pg.transform.scale(load_image(BACKGROUNDS["gameplay"], -1)[0], MODE)
@@ -53,7 +52,7 @@ class Gameplay(state_machine._State):
             base = map_components.TowerPlace(coord)
             self.tower_places.append(base)
 
-        self.tower_places[1].set_tower("turret")
+        #self.tower_places[1].set_tower("turret")
 
     def get_event(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
@@ -86,6 +85,10 @@ class Gameplay(state_machine._State):
                 '''
 
     def update(self, keys, now):
+        if self.life == 0:
+            self.next = "GAMEOVER"
+            self.done = True
+
         if pg.time.get_ticks() - self.last_spawn_time >= 2000:
             minion = mobs.Minion(1, self.full_path[0], self.full_path)
             self.mobs.append(minion)
@@ -101,6 +104,9 @@ class Gameplay(state_machine._State):
             else:
                 if mob.health <= 0:
                     self.money += mob.reward
+                else:
+                    self.life -= mob.damage
+                    if self.life < 0: self.life = 0
                 self.mobs.remove(mob)
         
         self.hud_controller.match_hud.update(now, self.life, self.money)
