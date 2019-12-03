@@ -14,7 +14,8 @@ TURRET_ATTRIBUTES = {
     'damage':      2,
     'fire_range':  300,
     'fire_rate':   1.6,
-    'bullet_speed': 6
+    'bullet_speed': 6,
+    'cost': 100
 }
 
 BOMBER_ATTRIBUTES = {
@@ -22,7 +23,8 @@ BOMBER_ATTRIBUTES = {
     'damage':      6,
     'fire_range':  250,
     'fire_rate':   50,
-    'fire_radius': 50
+    'fire_radius': 50,
+    'cost': 150
 }
 
 SNIPER_ATTRIBUTES = {
@@ -30,7 +32,8 @@ SNIPER_ATTRIBUTES = {
     'damage':     15,
     'fire_range': 500,
     'fire_rate':  1.2,
-    'bullet_speed': 18
+    'bullet_speed': 18,
+    'cost': 350
 }
 
 

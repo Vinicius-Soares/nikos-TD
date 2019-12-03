@@ -1,4 +1,6 @@
 import pygame as pg
+import sys
+
 from ..constants import WIDTH, FONT_PATH
 from .. import state_machine
 
@@ -38,7 +40,9 @@ class Menu(state_machine._State):
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_RETURN:
                 self.next = self.options[self.cursor["index"]]["value"]
-                if self.next == "SAIR": pg.quit()
+                if self.next == "SAIR": 
+                    pg.quit()
+                    sys.exit()
                 else: self.done = True
             if event.key == pg.K_DOWN:
                 if self.cursor["index"] < 2: self.cursor["index"]+=1

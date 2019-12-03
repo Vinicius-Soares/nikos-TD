@@ -36,9 +36,6 @@ class Gameplay(state_machine._State):
 
         self.load_map()
 
-        minion = mobs.Minion(1, self.full_path[0], self.full_path)
-        self.mobs.append(minion)
-
         self.last_spawn_time = pg.time.get_ticks()
 
     def load_map(self):
@@ -62,19 +59,35 @@ class Gameplay(state_machine._State):
         if event.type == pg.MOUSEBUTTONDOWN:
             x, y = pg.mouse.get_pos()
             if not self.hud_controller.click_on_any_hud(x, y):
-                self.hud_controller.reset()
+                self.hud_controller.close_tower_select_hud()
+                self.hud_controller.close_upgrade_hud()
                 for tower_place in self.tower_places:
                     if tower_place.click_on_it(x, y):
-                        self.hud_controller.show_tower_hud(tower_place.tower)
-                        tower_place.selected = True
+                        if not tower_place.tower:
+                            self.hud_controller.show_tower_select_hud(tower_place)
+                            tower_place.selected = True
+                        else:
+                            self.hud_controller.show_upgrade_tower_hud(tower_place.tower)
+                        '''
+                            Para testes
+                        '''
                         if not tower_place.tower: 
-                            tower_place.set_tower("turret") # Apenas para testes
-            else:
+                            tower_place.set_tower("turret")
+            else: 
+                pass
+                '''
                 self.hud_controller.get_event(event)
+                if self.hud_controller.tower_hud.done:
+                    selected_tower = self.hud_controller.tower_hud.selected_tower
+                    tower_name = selected_tower.name
+                    tower_cost = selected_tower.cost
+                    self.hud_controller.selected_tower_place.set_tower(tower_name)
+                    self.money -= tower_cost
+                '''
 
     def update(self, keys, now):
         if pg.time.get_ticks() - self.last_spawn_time >= 2000:
-            minion = mobs.Fatman(1, self.full_path[0], self.full_path)
+            minion = mobs.Minion(1, self.full_path[0], self.full_path)
             self.mobs.append(minion)
             self.last_spawn_time = pg.time.get_ticks()
 
@@ -90,7 +103,8 @@ class Gameplay(state_machine._State):
                     self.money += mob.reward
                 self.mobs.remove(mob)
         
-        self.hud_controller.update(now, self.life, self.money)
+        self.hud_controller.match_hud.update(now, self.life, self.money)
+        self.hud_controller.tower_select_hud.update(now, self.money)
 
     def draw(self, surface):
         surface.blit(self.background, (0, 0))
@@ -103,4 +117,5 @@ class Gameplay(state_machine._State):
         for mob in self.mobs:
             mob.draw(surface)
 
-        self.hud_controller.draw(surface)
+        self.hud_controller.match_hud.draw(surface)
+        self.hud_controller.tower_select_hud.draw(surface)
