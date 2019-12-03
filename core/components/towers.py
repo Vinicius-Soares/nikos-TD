@@ -44,8 +44,8 @@ class _Tower(pg.sprite.Sprite):
         self.image, self.rect = load_image(image_path, -1)
         self.image = pg.transform.scale(self.image, (50, 50))
         self.rect = self.image.get_rect()
-        self.x_cor, self.y_cor = cors
-        self.rect.center = cors
+        self.position = pg.Vector2(cors)
+        self.rect.center = self.position
         self.bullets = []
         self.target = None
         self.done = False
@@ -81,13 +81,11 @@ class _Tower(pg.sprite.Sprite):
         else: pass
 
     def fire(self):
-        new_bullet = Bullet((self.x_cor, self.y_cor), self.target, self.bullet_speed)
+        new_bullet = Bullet(self.position, self.target, self.bullet_speed)
         self.bullets.append(new_bullet)
 
     def is_in_range(self, mob):
-        x, xo, y, yo = self.x_cor, mob.x_cor, self.y_cor, mob.y_cor
-        return (x-xo)**2 + (y-yo)**2 < self.fire_range**2
-
+        return self.position.distance_to(mob.position) < self.fire_range
 
 class Turret(_Tower):
     def __init__(self, cors):
