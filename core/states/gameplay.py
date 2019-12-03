@@ -1,8 +1,8 @@
 import pygame as pg
 
-from .. import hud_controller
 from .. import state_machine
 from ..components import map_components, mobs, towers
+from ..controllers import hud_controller as hc
 from ..constants import PATH_TYPES, TOWERPLACE_SPRITE, BACKGROUNDS, MODE
 from ..tools import load_image
 
@@ -21,12 +21,11 @@ class Gameplay(state_machine._State):
 
         self.tower_positions = ((2, 2),(4, 5),(6, 6), (15, 2),(13, 5),(11, 6))
         self.tower_positions = [(x*64-32,y*64-32) for (x,y) in self.tower_positions]
-        
         self.life = 5
         self.money = 100
 
         self.background = pg.transform.scale(load_image(BACKGROUNDS["gameplay"], -1)[0], MODE)
-        self.hud_controller = hud_controller.HudController()
+        self.hud_controller = hc.HudController()
 
     def startup(self, now, persistant):
         state_machine._State.startup(self, now, persistant)
@@ -64,7 +63,7 @@ class Gameplay(state_machine._State):
                     if tower_place.click_on_it(x, y):
                         self.hud_controller.show_tower_hud(tower_place.tower)
                         tower_place.selected = True
-                        if not tower_place.tower: 
+                        if not tower_place.tower:
                             tower_place.set_tower("turret") # Apenas para testes
             else:
                 self.hud_controller.get_event(event)
@@ -75,7 +74,7 @@ class Gameplay(state_machine._State):
             self.done = True
 
         if pg.time.get_ticks() - self.last_spawn_time >= 2000:
-            minion = mobs.Runner(1, self.full_path[0], self.full_path)
+            minion = mobs.Fatman(1, self.full_path[0], self.full_path)
             self.mobs.append(minion)
             self.last_spawn_time = pg.time.get_ticks()
 
@@ -93,8 +92,7 @@ class Gameplay(state_machine._State):
                     self.life -= mob.damage
                     if self.life < 0: self.life = 0
                 self.mobs.remove(mob)
-        
-        self.hud_controller.update(now, self.money, self.life)
+        self.hud_controller.update(now, self.life, self.money)
 
     def draw(self, surface):
         surface.blit(self.background, (0, 0))

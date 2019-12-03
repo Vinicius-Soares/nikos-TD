@@ -3,20 +3,26 @@ import pygame as pg
 from pathlib import Path
 
 BASE_PATH = Path()
+
+SPRITE_PATH = BASE_PATH / "sprites"
 FONT_PATH = BASE_PATH / "assets" / "fonts" / "Pixeled.ttf"
+SOUND_PATH = BASE_PATH / "assets" / "sounds"
 
 WIDTH = 1024
 HEIGHT = 768
 MODE = (WIDTH, HEIGHT)
 TITLE = "Niko's Tower Defense"
 
-SPRITE_PATH = BASE_PATH / "sprites"
-
 BACKGROUNDS = {
     "menu" : SPRITE_PATH / "background.png",
     "credits" : SPRITE_PATH / "background.png",
     "gameplay" : SPRITE_PATH / "background.png",
     "gameover" : SPRITE_PATH / "background.png"
+}
+
+SOUNDS = {
+    "mob_death": SOUND_PATH / "mob_death.wav",
+    "turret_shot": SOUND_PATH / "turret_shot.wav"
 }
 
 PATH_TYPES = {
@@ -47,6 +53,7 @@ BULLET_SPRITES = {
 
 HUD_SPRITES = {
     "background": SPRITE_PATH / "background_hud.png",
+    "button": SPRITE_PATH / "button.png",
     "health": SPRITE_PATH / "health.png",
     "coin": SPRITE_PATH / "coin.png"
 }

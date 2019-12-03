@@ -2,16 +2,18 @@
 import enum
 import math
 import pygame as pg
+import random
 
 from .bullet import Bullet
-from ..tools import load_image
 from ..constants import TOWER_SPRITES
+from ..controllers import sound_controller as sc
+from ..tools import load_image
 
 TURRET_ATTRIBUTES = {
     'name':       "turret",
-    'damage':      1,
+    'damage':      2,
     'fire_range':  300,
-    'fire_rate':   3.6,
+    'fire_rate':   1.6,
     'bullet_speed': 6
 }
 
@@ -50,14 +52,50 @@ class _Tower(pg.sprite.Sprite):
         self.target = None
         self.done = False
         self.last_bullet_time = pg.time.get_ticks()
-        self.behavior = TowerBehavior.FIRST
+        self.behavior = TowerBehavior.STRONG
+
+    def is_in_range(self, mob):
+        return self.position.distance_to(mob.position) < self.fire_range
+
+    def search_target(self, mobs):
+        if self.behavior == TowerBehavior.RANDOM and not self.target:
+            mobs_length = len(mobs)
+            random_index = random.randint(0, mobs_length - 1)
+            self.target = mobs[random_index]
+        elif self.behavior == TowerBehavior.FIRST:
+            self.target = mobs[0]
+        elif self.behavior == TowerBehavior.STRONG:
+            stronger = mobs[0]
+            health = mobs[0].health
+            for mob in mobs[1:]:
+                if mob.health > health:
+                    health = mob.health
+                    stronger = mob
+            self.target = stronger
+        else:
+            weaker = mobs[0]
+            health = mobs[0].health
+            for mob in mobs[1:]:
+                if mob.health < health:
+                    health = mob.health
+                    weaker = mob
+            self.target = weaker
+
+    def fire(self):
+        new_bullet = Bullet(self.position, self.target, self.damage, self.bullet_speed)
+        self.bullets.append(new_bullet)
+        sc.SoundController().play_turret_shot()
 
     def update(self, now, mobs):
-        self.search_target(mobs)
-        if self.target and \
-            now - self.last_bullet_time >= (1 / self.fire_rate) * 1000:
-            self.fire()
-            self.last_bullet_time = now
+        if not self.target:
+            mobs_in_range = [mob for mob in mobs if self.is_in_range(mob)]
+            if len(mobs_in_range) > 0: self.search_target(mobs_in_range)
+        else:
+            if now - self.last_bullet_time >= (1 / self.fire_rate) * 1000:
+                self.fire()
+                self.last_bullet_time = now
+
+            if self.target.done: self.target = None
 
         for bullet in self.bullets:
             if not bullet.done: bullet.update()
@@ -69,23 +107,6 @@ class _Tower(pg.sprite.Sprite):
 
         for bullet in self.bullets:
             bullet.draw(surface)
-
-    def search_target(self, mobs):
-        if self.behavior == TowerBehavior.RANDOM: pass
-        elif self.behavior == TowerBehavior.FIRST:
-            for mob in mobs:
-                if self.is_in_range(mob):
-                    self.target = mob
-                    break
-        elif self.behavior == TowerBehavior.STRONG: pass
-        else: pass
-
-    def fire(self):
-        new_bullet = Bullet(self.position, self.target, self.bullet_speed)
-        self.bullets.append(new_bullet)
-
-    def is_in_range(self, mob):
-        return self.position.distance_to(mob.position) < self.fire_range
 
 class Turret(_Tower):
     def __init__(self, cors):

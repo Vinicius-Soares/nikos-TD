@@ -16,7 +16,7 @@ RUNNER_ATTRIBUTES = {
     'name':  "runner",
     'health': 10,
     'speed' : 2,
-    'damage': 0.5
+    'damage': 1
 }
 
 FATMAN_ATTRIBUTES = {
@@ -48,7 +48,6 @@ class _Mob(pg.sprite.Sprite):
                 if self._next_block_index < len(self.path) - 1:
                     self._next_block_index += 1
                 else: self.done = True
-
             else:
                 self.position += (position_target - self.position).normalize() * self.speed
                 self.rect.center = self.position

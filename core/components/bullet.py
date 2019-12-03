@@ -1,18 +1,20 @@
 import pygame as pg
 from math import atan2, degrees, cos, sin, pi
+
 from ..tools import load_image
 from ..constants import BULLET_SPRITES
+from ..controllers import sound_controller as sc
 
 class Bullet(pg.sprite.Sprite):
-    def __init__(self, position, target, speed):
+    def __init__(self, position, target, damage, speed):
         super().__init__()
         self.image = pg.transform.scale(load_image(BULLET_SPRITES["turret"], -1)[0], (7, 7))
         self.rect = self.image.get_rect()
         self.position = pg.Vector2(position)
         self.rect.center = position
         self.target = target
+        self.damage = damage
         self.speed = speed
-        self.damage = 2
         self.done = False
 
     def update(self):
@@ -23,7 +25,9 @@ class Bullet(pg.sprite.Sprite):
         
         if hit_target:
             self.target.health -= self.damage
-            if self.target.health <= 0: self.target.done = True
+            if self.target.health <= 0: 
+                self.target.done = True
+                sc.SoundController().play_mob_death()
             self.done = True
 
     def draw(self, surface):
