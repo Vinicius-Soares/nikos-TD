@@ -7,22 +7,22 @@ from ..constants import ENEMY_SPRITES
 
 MINION_ATTRIBUTES = {
     'name':  "minion",
-    'health': 4,
+    'health': 12,
     'speed' : 1,
     'damage': 1
 }
 
 RUNNER_ATTRIBUTES = {
     'name':  "runner",
-    'health': 2,
-    'speed' : 1.5,
+    'health': 10,
+    'speed' : 3,
     'damage': 0.5
 }
 
 FATMAN_ATTRIBUTES = {
     'name':  "fatman",
-    'health': 8,
-    'speed' : 0.3,
+    'health': 48,
+    'speed' : 0.5,
     'damage': 2
 }
 

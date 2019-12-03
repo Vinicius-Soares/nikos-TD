@@ -11,7 +11,7 @@ class Bullet(pg.sprite.Sprite):
         self.position = pg.Vector2(position)
         self.rect.center = position
         self.target = target
-        self.speed= speed
+        self.speed = speed
         self.damage = 2
         self.done = False
 
