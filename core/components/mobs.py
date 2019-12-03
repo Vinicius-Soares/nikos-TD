@@ -7,22 +7,22 @@ from ..constants import ENEMY_SPRITES
 
 MINION_ATTRIBUTES = {
     'name':  "minion",
-    'health': 4,
+    'health': 12,
     'speed' : 1,
     'damage': 1
 }
 
 RUNNER_ATTRIBUTES = {
     'name':  "runner",
-    'health': 2,
-    'speed' : 1.5,
+    'health': 10,
+    'speed' : 3,
     'damage': 0.5
 }
 
 FATMAN_ATTRIBUTES = {
     'name':  "fatman",
-    'health': 8,
-    'speed' : 0.3,
+    'health': 48,
+    'speed' : 0.5,
     'damage': 2
 }
 
@@ -30,8 +30,8 @@ class _Mob(pg.sprite.Sprite):
     def __init__(self, image_path, cors, path):
         pg.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image(image_path, -1)
-        self.x_cor, self.y_cor = cors
-        self.rect.center = cors
+        self.position = pg.Vector2(cors)
+        self.rect.center = self.position
         self.path = path
         self._next_block_index = 0
         self.done = False
@@ -42,24 +42,16 @@ class _Mob(pg.sprite.Sprite):
     def update(self):
         reached_destiny = self._next_block_index == len(self.path)
         if not reached_destiny:
-            next_x, next_y = self.path[self._next_block_index]
+            position_target = pg.Vector2(self.path[self._next_block_index])
 
-            if self.x_cor == next_x and self.y_cor == next_y:
+            if self.position == position_target:
                 if self._next_block_index < len(self.path) - 1:
                     self._next_block_index += 1
                 else: self.done = True
-                block_x, block_y = self.path[self._next_block_index]
-
-                current_block_index = self._next_block_index - 1
-                current_block_x, current_block_y = self.path[current_block_index]
-
-                self._dx = (block_x - current_block_x) / (60-self.speed)
-                self._dy = (block_y - current_block_y) / (60-self.speed)
 
             else:
-                self.x_cor += int(self._dx)
-                self.y_cor += int(self._dy)
-                self.rect.center = (self.x_cor, self.y_cor)
+                self.position += (position_target - self.position).normalize() * self.speed
+                self.rect.center = self.position
 
     def draw(self, surface):
         if not self.done: surface.blit(self.image, self.rect.topleft)

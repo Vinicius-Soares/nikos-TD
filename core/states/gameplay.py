@@ -56,7 +56,7 @@ class Gameplay(state_machine._State):
             base = map_components.TowerPlace(coord)
             self.tower_places.append(base)
 
-        self.tower_places[-1].set_tower("turret")
+        self.tower_places[1].set_tower("turret")
 
     def get_event(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
