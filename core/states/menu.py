@@ -12,7 +12,7 @@ class Menu(state_machine._State):
         self.next = "GAMEPLAY"
         self.font = pg.font.Font(FONT_PATH.as_posix(), 40)
 
-        title_font = self.font.render("NIKOS  TD", True, text_color)
+        title_font = self.font.render("NIKOS  TOWERDEFENSE", True, text_color)
         self.title = {
             "font": title_font,
             "cors": ((WIDTH-title_font.get_width())/2, 50)

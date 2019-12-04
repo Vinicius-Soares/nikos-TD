@@ -20,11 +20,6 @@ BACKGROUNDS = {
     "gameover" : SPRITE_PATH / "background.png"
 }
 
-SOUNDS = {
-    "mob_death": SOUND_PATH / "mob_death.wav",
-    "turret_shot": SOUND_PATH / "turret_shot.wav"
-}
-
 PATH_TYPES = {
     "begin": SPRITE_PATH / "begin.png",
     "end": SPRITE_PATH / "end.png",
