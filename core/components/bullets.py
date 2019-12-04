@@ -6,9 +6,10 @@ from ..constants import BULLET_SPRITES
 from ..controllers import sound_controller as sc
 
 class TurretBullet(pg.sprite.Sprite):
-    def __init__(self, position, target, damage, speed):
+    def __init__(self, position, type, target, damage, speed):
         super().__init__()
-        self.image = pg.transform.scale(load_image(BULLET_SPRITES["turret"], -1)[0], (7, 7))
+        self.type = type
+        self.image = pg.transform.scale(load_image(BULLET_SPRITES[self.type], -1)[0], (7, 7))
         self.rect = self.image.get_rect()
         self.position = pg.Vector2(position)
         self.rect.center = position
@@ -18,6 +19,7 @@ class TurretBullet(pg.sprite.Sprite):
         self.done = False
 
     def update(self):
+        if not self.target: return
         self.position += (self.target.position - self.position).normalize() * self.speed
         self.rect.center = self.position
 

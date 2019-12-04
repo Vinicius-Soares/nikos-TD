@@ -3,6 +3,7 @@ import enum
 
 from ..components import ui
 from ..constants import COLORS, FONT_PATH, HUD_SPRITES, WIDTH, TOWER_SPRITES
+from ..controllers import sound_controller as sc
 from ..tools import load_image
 
 TOWERS_COST = {
@@ -120,8 +121,9 @@ class TowerHud():
         if self.click_on_button(x, y):
             if self.selected_tower_name and \
                 self.money >= TOWERS_COST[self.selected_tower_name]:
-                self.done = True
                 self.discount = TOWERS_COST[self.selected_tower_name]
+                self.done = True
+            sc.SoundController().play_button_click()
         else:
             for tower_image in self.tower_images:
                 if tower_image.click_on_it(x, y):

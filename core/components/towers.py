@@ -57,6 +57,7 @@ class _Tower(pg.sprite.Sprite):
         self.rect.center = self.position
         self.bullets = []
         self.target = None
+        self.can_shoot = False
         self.done = False
         self.last_bullet_time = pg.time.get_ticks()
         self.behavior = TowerBehavior.RANDOM
@@ -97,15 +98,14 @@ class _Tower(pg.sprite.Sprite):
             if len(mobs_in_range) > 0: self.search_target(mobs_in_range)
         else:
             if now - self.last_bullet_time >= (1 / self.fire_rate) * 1000:
-                self.fire()
+                self.can_shoot = True
                 self.last_bullet_time = now
 
             if self.target.done or \
                 not self.is_in_range(self.target): self.target = None
 
         for bullet in self.bullets:
-            if not self.is_in_range(bullet):
-                bullet.done = True
+            if not self.is_in_range(bullet): bullet.done = True
 
             if not bullet.done: bullet.update()
             else: self.bullets.remove(bullet)
@@ -124,11 +124,13 @@ class Turret(_Tower):
 
     def update(self, now, mobs):
         super().update(now, mobs)
+        if self.can_shoot: self.fire()
 
     def fire(self):
-        new_bullet = TurretBullet(self.position, self.target, self.damage, self.bullet_speed)
+        new_bullet = TurretBullet(self.position, self.name, self.target, self.damage, self.bullet_speed)
         self.bullets.append(new_bullet)
         sc.SoundController().play_turret_shot()
+        self.can_shoot = False
 
 
 class Bomber(_Tower):
