@@ -11,7 +11,6 @@ class Gameplay(state_machine._State):
         state_machine._State.__init__(self)
         self.next = "MENU"
         self.all_sprites = pg.sprite.Group()
-        #self.full_path = ((2, 3),(2, 4),(2, 5),(3, 5),(4, 5),(5, 5),(6, 5),(7, 5),(8, 5))[::-1]
         self.full_path = ((7, 2), (7, 3), (6, 3), (5, 3), (4, 3), (3, 3), (2, 3),
                           (2, 4), (2, 5), (2, 6), (2, 7), (3, 7), (4, 7), (5, 7), (5, 6),
                           (5, 5), (6, 5), (7, 5), (8, 5), (9, 5), (10, 5), (11, 5), (12, 5),
@@ -43,16 +42,58 @@ class Gameplay(state_machine._State):
         
         self.waves, self.current_wave = [], 0
         
-        self.waves_intervals = [1, 0]
+        self.waves_intervals = [1, 0, 5, 5, 5]
 
-        wave_mobs = [1, 2, 3, 1, 2, 3, 2, 2, 2, 3, 3, 3, 3, 2, 2, 2, 2]
-        intervals = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        wave_mobs = [
+            1, 2, 3, 1, 2, 3, 2, 2, 2, 3, 3, 3, 3, 2, 2, 2, 2
+        ]
+        intervals = [
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+        ]
 
         new_wave = wave.Wave(wave_mobs, self.full_path, intervals, now)
         self.waves.append(new_wave)
 
-        wave_mobs = [3, 2, 1, 3, 2, 1, 3, 2, 1, 3, 2, 1, 3, 2, 1]
-        intervals = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        wave_mobs = [
+            3, 2, 1, 3, 2, 1, 3, 2, 1, 3, 2, 1, 3, 2, 1
+        ]
+        intervals = [
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+        ]
+
+        new_wave = wave.Wave(wave_mobs, self.full_path, intervals, now)
+        self.waves.append(new_wave)
+
+        wave_mobs = [
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+        ]
+        intervals = [
+            0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+            0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 
+            0.5
+        ]
+
+        new_wave = wave.Wave(wave_mobs, self.full_path, intervals, now)
+        self.waves.append(new_wave)
+
+        wave_mobs = [
+            3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
+        ]
+        intervals = [
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+        ]
+
+        new_wave = wave.Wave(wave_mobs, self.full_path, intervals, now)
+        self.waves.append(new_wave)
+
+        wave_mobs = [
+            2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3
+        ]
+        intervals = [
+            0.5, 0.5, 0.5, 0.5, 0.5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1
+        ]
 
         new_wave = wave.Wave(wave_mobs, self.full_path, intervals, now)
         self.waves.append(new_wave)
