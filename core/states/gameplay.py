@@ -1,7 +1,7 @@
 import pygame as pg
 
 from .. import state_machine
-from ..components import map_components, mobs, towers
+from ..components import map_components, mobs, towers, wave
 from ..controllers import hud_controller as hc
 from ..constants import PATH_TYPES, TOWERPLACE_SPRITE, BACKGROUNDS, MODE
 from ..tools import load_image
@@ -35,7 +35,21 @@ class Gameplay(state_machine._State):
 
         self.load_map()
 
-        self.last_spawn_time = pg.time.get_ticks()
+        now = pg.time.get_ticks()
+
+        self.last_spawn_time = now
+
+        self.waves, self.current_wave = [], 0
+        
+        m1 = mobs.Minion(1, self.full_path[0], self.full_path)
+        m2 = mobs.Minion(1, self.full_path[0], self.full_path)
+        m3 = mobs.Minion(1, self.full_path[0], self.full_path)
+
+        wave_mobs = [m1, m2, m3]
+        intervals = [3, 4, 5]
+
+        new_wave = wave.Wave(wave_mobs, intervals, now)
+        self.waves.append(new_wave)
 
     def load_map(self):
         begin = map_components.EnemyPath("begin", self.full_path[0])
@@ -76,10 +90,14 @@ class Gameplay(state_machine._State):
             self.next = "GAMEOVER"
             self.done = True
 
-        if pg.time.get_ticks() - self.last_spawn_time >= 2000:
+        now = pg.time.get_ticks()
+
+        self.waves[self.current_wave].update(now)
+
+        if now - self.last_spawn_time >= 2000:
             minion = mobs.Minion(1, self.full_path[0], self.full_path)
             self.mobs.append(minion)
-            self.last_spawn_time = pg.time.get_ticks()
+            self.last_spawn_time = now
 
         self.all_sprites.update()
 
