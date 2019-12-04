@@ -40,7 +40,7 @@
  [],
  False,
  False,
- 1575488273,
+ 1575497736,
  [('run.exe',
    'c:\\users\\victo\\appdata\\local\\programs\\python\\python37-32\\lib\\site-packages\\PyInstaller\\bootloader\\Windows-32bit\\run.exe',
    'EXECUTABLE')])
