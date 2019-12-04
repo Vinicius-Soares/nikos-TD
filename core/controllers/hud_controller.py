@@ -28,7 +28,7 @@ class HudController(object):
         self.tower_select_hud.show = True
 
     def show_tower_details_hud(self, tower):
-        print("OK")
+        pass
 
     def close_tower_select_hud(self):
         self.tower_select_hud = TowerHud()

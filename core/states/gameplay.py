@@ -72,14 +72,11 @@ class Gameplay(state_machine._State):
             base = map_components.TowerPlace(coord)
             self.tower_places.append(base)
 
-        #self.tower_places[1].set_tower("turret")
-
     def get_event(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
             x, y = pg.mouse.get_pos()
             if self.hud_controller.tower_select_hud.click_on_it(x, y):
                 self.hud_controller.tower_select_hud.get_click_event_pos(x, y)
-            #elif self.hud_controller.tower_details_hud.click_on_it(x, y):
             else:
                 self.hud_controller.close_tower_select_hud()
                 self.hud_controller.close_tower_details_hud()
