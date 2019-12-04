@@ -94,7 +94,7 @@ class Gameplay(state_machine._State):
 
         self.waves[self.current_wave].update(now)
 
-        if now - self.last_spawn_time >= 2000:
+        if now - self.last_spawn_time >= 200:
             minion = mobs.Minion(1, self.full_path[0], self.full_path)
             self.mobs.append(minion)
             self.last_spawn_time = now

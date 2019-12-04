@@ -4,7 +4,7 @@ import math
 import pygame as pg
 import random
 
-from .bullets import TurretBullet
+from .bullets import Bullet
 from ..constants import TOWER_SPRITES
 from ..controllers import sound_controller as sc
 from ..tools import load_image
@@ -21,12 +21,13 @@ TURRET_ATTRIBUTES = {
 
 
 BOMBER_ATTRIBUTES = {
-    'name':       "bomber",
-    'damage':      6,
-    'fire_range':  250,
-    'fire_rate':   50,
-    'fire_radius': 50,
-    'cost': 150
+    'name':         "bomber",
+    'damage':       6,
+    'fire_range':   250,
+    'fire_rate':    0.6,
+    'fire_radius':  56,
+    'bullet_speed': 2,
+    'cost':         150
 }
 
 
@@ -57,7 +58,6 @@ class _Tower(pg.sprite.Sprite):
         self.rect.center = self.position
         self.bullets = []
         self.target = None
-        self.can_shoot = False
         self.done = False
         self.last_bullet_time = pg.time.get_ticks()
         self.behavior = TowerBehavior.RANDOM
@@ -89,8 +89,23 @@ class _Tower(pg.sprite.Sprite):
                     weaker = mob
             self.target = weaker
 
+    def draw(self, surface):
+        surface.blit(self.image, self.rect.topleft)
+
+        for bullet in self.bullets:
+            bullet.draw(surface)
+
+    def update(self, now, mobs):
+        pass
+
     def fire(self):
         pass
+
+
+class Turret(_Tower):
+    def __init__(self, cors):
+        super().__init__(TOWER_SPRITES["turret"], cors)
+        self.__dict__.update(TURRET_ATTRIBUTES)
 
     def update(self, now, mobs):
         if not self.target:
@@ -98,7 +113,7 @@ class _Tower(pg.sprite.Sprite):
             if len(mobs_in_range) > 0: self.search_target(mobs_in_range)
         else:
             if now - self.last_bullet_time >= (1 / self.fire_rate) * 1000:
-                self.can_shoot = True
+                self.fire()
                 self.last_bullet_time = now
 
             if self.target.done or \
@@ -110,27 +125,10 @@ class _Tower(pg.sprite.Sprite):
             if not bullet.done: bullet.update()
             else: self.bullets.remove(bullet)
 
-    def draw(self, surface):
-        surface.blit(self.image, self.rect.topleft)
-
-        for bullet in self.bullets:
-            bullet.draw(surface)
-
-
-class Turret(_Tower):
-    def __init__(self, cors):
-        super().__init__(TOWER_SPRITES["turret"], cors)
-        self.__dict__.update(TURRET_ATTRIBUTES)
-
-    def update(self, now, mobs):
-        super().update(now, mobs)
-        if self.can_shoot: self.fire()
-
     def fire(self):
-        new_bullet = TurretBullet(self.position, self.name, self.target, self.damage, self.bullet_speed)
+        new_bullet = Bullet(self.position, self.name, self.target, self.damage, self.bullet_speed)
         self.bullets.append(new_bullet)
         sc.SoundController().play_turret_shot()
-        self.can_shoot = False
 
 
 class Bomber(_Tower):
@@ -138,11 +136,45 @@ class Bomber(_Tower):
         super().__init__(TOWER_SPRITES["bomber"], cors)
         self.__dict__.update(BOMBER_ATTRIBUTES)
 
+    def is_is_bullet_radius(self, bullet, mob):
+        return bullet.position.distance_to(mob.position) < self.fire_radius
+
+    def find_nearly_mobs(self, bullet, mobs):
+        nearly_mobs = []
+        for mob in mobs:
+            if self.is_is_bullet_radius(bullet, mob): 
+                nearly_mobs.append(mob)
+        return nearly_mobs
+
     def update(self, now, mobs):
-        super().update(now, mobs)
+        if not self.target:
+            mobs_in_range = [mob for mob in mobs if self.is_in_range(mob)]
+            if len(mobs_in_range) > 0: self.search_target(mobs_in_range)
+        else:
+            if now - self.last_bullet_time >= (1 / self.fire_rate) * 1000:
+                self.fire()
+                self.last_bullet_time = now
+
+            if self.target.done or \
+                not self.is_in_range(self.target): self.target = None
+
+        for bullet in self.bullets:
+            if not self.is_in_range(bullet): bullet.done = True
+
+            if not bullet.done: bullet.update()
+            else: 
+                nearly_mobs = self.find_nearly_mobs(bullet, mobs)
+                for mob in nearly_mobs:
+                    mob.health -= self.damage
+                    if mob.health <= 0:
+                        mob.done = True
+                        sc.SoundController().play_mob_death()
+                self.bullets.remove(bullet)
 
     def fire(self):
-        pass
+        new_bullet = Bullet(self.position, self.name, self.target, self.damage, self.bullet_speed)
+        self.bullets.append(new_bullet)
+        sc.SoundController().play_turret_shot()
 
 
 class Sniper(_Tower):
