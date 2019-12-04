@@ -37,18 +37,22 @@ class Gameplay(state_machine._State):
 
         now = pg.time.get_ticks()
 
-        self.last_spawn_time = now
-
+        self.last_enemy_spawn_time = now
+        
         self.waves, self.current_wave = [], 0
         
-        m1 = mobs.Minion(1, self.full_path[0], self.full_path)
-        m2 = mobs.Minion(1, self.full_path[0], self.full_path)
-        m3 = mobs.Minion(1, self.full_path[0], self.full_path)
+        self.waves_intervals = [1, 0]
 
-        wave_mobs = [m1, m2, m3]
-        intervals = [3, 4, 5]
+        wave_mobs = [1, 2, 3]
+        intervals = [1, 1, 1]
 
-        new_wave = wave.Wave(wave_mobs, intervals, now)
+        new_wave = wave.Wave(wave_mobs, self.full_path, intervals, now)
+        self.waves.append(new_wave)
+
+        wave_mobs = [3, 2, 1]
+        intervals = [1, 1, 1]
+
+        new_wave = wave.Wave(wave_mobs, self.full_path, intervals, now)
         self.waves.append(new_wave)
 
     def load_map(self):
@@ -92,12 +96,18 @@ class Gameplay(state_machine._State):
 
         now = pg.time.get_ticks()
 
-        self.waves[self.current_wave].update(now)
+        if self.current_wave < len(self.waves):
+            current_wave = self.waves[self.current_wave]
 
-        if now - self.last_spawn_time >= 2000:
-            minion = mobs.Minion(1, self.full_path[0], self.full_path)
-            self.mobs.append(minion)
-            self.last_spawn_time = now
+            if current_wave.finished:
+
+                if  (now >= self.last_enemy_spawn_time + self.waves_intervals[self.current_wave] * 1000):
+                    self.current_wave+=1 
+            else:
+                current_wave.update(now)
+                if current_wave.ready:
+                    self.last_enemy_spawn_time = now
+                    self.mobs.append(current_wave.next())
 
         self.all_sprites.update()
 
