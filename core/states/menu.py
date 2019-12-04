@@ -9,6 +9,7 @@ from .. import state_machine
 class Menu(state_machine._State):
     def __init__(self):
         state_machine._State.__init__(self)
+        self.next = "GAMEPLAY"
         
         self.background = pg.transform.scale(load_image(BACKGROUNDS["menu"], -1)[0], MODE)
         self.button = pg.transform.scale(load_image(HUD_SPRITES["button"], -1)[0], (500, 210))
@@ -19,20 +20,13 @@ class Menu(state_machine._State):
             "index": 0
         }
 
-        text_color = (128, 255, 0)
-        self.next = "GAMEPLAY"
         self.font = pg.font.Font(FONT_PATH.as_posix(), 40)
+        text_color = (128, 255, 0)
 
         title_font = self.font.render("NIKOS  TOWERDEFENSE", True, text_color)
         self.title = {
             "font": title_font,
             "cors": ((WIDTH-title_font.get_width())/2, 50)
-        }
-
-        self.cursor = {
-            "font" : self.font.render("o", True, text_color),
-            "cors": [300, 200],
-            "index": 0
         }
 
         self.options = [
