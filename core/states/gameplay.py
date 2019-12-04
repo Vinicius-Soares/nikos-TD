@@ -45,14 +45,14 @@ class Gameplay(state_machine._State):
         
         self.waves_intervals = [1, 0]
 
-        wave_mobs = [1, 2, 3]
-        intervals = [1, 1, 1]
+        wave_mobs = [1, 2, 3, 1, 2, 3, 2, 2, 2, 3, 3, 3, 3, 2, 2, 2, 2]
+        intervals = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
         new_wave = wave.Wave(wave_mobs, self.full_path, intervals, now)
         self.waves.append(new_wave)
 
-        wave_mobs = [3, 2, 1]
-        intervals = [1, 1, 1]
+        wave_mobs = [3, 2, 1, 3, 2, 1, 3, 2, 1, 3, 2, 1, 3, 2, 1]
+        intervals = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
         new_wave = wave.Wave(wave_mobs, self.full_path, intervals, now)
         self.waves.append(new_wave)

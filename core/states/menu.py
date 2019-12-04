@@ -1,13 +1,24 @@
 import pygame as pg
 import sys
 
-from ..constants import WIDTH, FONT_PATH
+from  ..tools import load_image
+from ..constants import WIDTH, MODE, FONT_PATH, BACKGROUNDS, HUD_SPRITES
 from .. import state_machine
 
 
 class Menu(state_machine._State):
     def __init__(self):
         state_machine._State.__init__(self)
+        
+        self.background = pg.transform.scale(load_image(BACKGROUNDS["menu"], -1)[0], MODE)
+        self.button = pg.transform.scale(load_image(HUD_SPRITES["button"], -1)[0], (500, 210))
+
+        self.button = {
+            "sprite" : self.button,
+            "cors": [250, 155],
+            "index": 0
+        }
+
         text_color = (128, 255, 0)
         self.next = "GAMEPLAY"
         self.font = pg.font.Font(FONT_PATH.as_posix(), 40)
@@ -20,7 +31,7 @@ class Menu(state_machine._State):
 
         self.cursor = {
             "font" : self.font.render("o", True, text_color),
-            "cors": [200, 200],
+            "cors": [300, 200],
             "index": 0
         }
 
@@ -39,26 +50,26 @@ class Menu(state_machine._State):
     def get_event(self, event):
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_RETURN:
-                self.next = self.options[self.cursor["index"]]["value"]
+                self.next = self.options[self.button["index"]]["value"]
                 if self.next == "SAIR": 
                     pg.quit()
                     sys.exit()
                 else: self.done = True
             if event.key == pg.K_DOWN:
-                if self.cursor["index"] < 2: self.cursor["index"]+=1
-                else: self.cursor["index"] = 0
-                self.cursor["cors"][1] = (self.cursor["index"]+2)*100
+                if self.button["index"] < 2: self.button["index"]+=1
+                else: self.button["index"] = 0
+                self.button["cors"][1] = (self.button["index"]+2)*100-45
             if event.key == pg.K_UP:
-                if self.cursor["index"] > 0: self.cursor["index"]-=1
-                else: self.cursor["index"] = 2
-                self.cursor["cors"][1] = (self.cursor["index"]+2)*100
+                if self.button["index"] > 0: self.button["index"]-=1
+                else: self.button["index"] = 2
+                self.button["cors"][1] = (self.button["index"]+2)*100-45
 
     def update(self, keys, now):
         pass
 
     def draw(self, surface):
-        surface.fill((128, 128, 128))
+        surface.blit(self.background, (0, 0))
         surface.blit(self.title["font"], self.title["cors"])
-        surface.blit(self.cursor["font"], self.cursor["cors"])
+        surface.blit(self.button["sprite"], self.button["cors"])
         for option in self.options:
             surface.blit(option["font"], option["cors"])
