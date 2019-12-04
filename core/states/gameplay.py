@@ -11,7 +11,6 @@ class Gameplay(state_machine._State):
         state_machine._State.__init__(self)
         self.next = "MENU"
         self.all_sprites = pg.sprite.Group()
-        #self.full_path = ((2, 3),(2, 4),(2, 5),(3, 5),(4, 5),(5, 5),(6, 5),(7, 5),(8, 5))[::-1]
         self.full_path = ((7, 2), (7, 3), (6, 3), (5, 3), (4, 3), (3, 3), (2, 3),
                           (2, 4), (2, 5), (2, 6), (2, 7), (3, 7), (4, 7), (5, 7), (5, 6),
                           (5, 5), (6, 5), (7, 5), (8, 5), (9, 5), (10, 5), (11, 5), (12, 5),
@@ -23,8 +22,8 @@ class Gameplay(state_machine._State):
                                 (13,2),(13, 5),(14,5),(13,6),(14,6),(11, 6),(11,7),(10,6),(9,6),(8,6),
                                 (7,6),(6,7))
         self.tower_positions = [(x*64-32,y*64-32) for (x,y) in self.tower_positions]
-        self.life = 5
-        self.money = 1000
+        self.life = 25
+        self.money = 500
 
         self.background = pg.transform.scale(load_image(BACKGROUNDS["gameplay"], -1)[0], MODE)
         self.hud_controller = hc.HudController()
@@ -43,16 +42,58 @@ class Gameplay(state_machine._State):
         
         self.waves, self.current_wave = [], 0
         
-        self.waves_intervals = [1, 0]
+        self.waves_intervals = [1, 0, 5, 5, 5]
 
-        wave_mobs = [1, 2, 3, 1, 2, 3, 2, 2, 2, 3, 3, 3, 3, 2, 2, 2, 2]
-        intervals = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        wave_mobs = [
+            1, 2, 3, 1, 2, 3, 2, 2, 2, 3, 3, 3, 3, 2, 2, 2, 2
+        ]
+        intervals = [
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+        ]
 
         new_wave = wave.Wave(wave_mobs, self.full_path, intervals, now)
         self.waves.append(new_wave)
 
-        wave_mobs = [3, 2, 1, 3, 2, 1, 3, 2, 1, 3, 2, 1, 3, 2, 1]
-        intervals = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        wave_mobs = [
+            3, 2, 1, 3, 2, 1, 3, 2, 1, 3, 2, 1, 3, 2, 1
+        ]
+        intervals = [
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+        ]
+
+        new_wave = wave.Wave(wave_mobs, self.full_path, intervals, now)
+        self.waves.append(new_wave)
+
+        wave_mobs = [
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+        ]
+        intervals = [
+            0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+            0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 
+            0.5
+        ]
+
+        new_wave = wave.Wave(wave_mobs, self.full_path, intervals, now)
+        self.waves.append(new_wave)
+
+        wave_mobs = [
+            3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
+        ]
+        intervals = [
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+        ]
+
+        new_wave = wave.Wave(wave_mobs, self.full_path, intervals, now)
+        self.waves.append(new_wave)
+
+        wave_mobs = [
+            2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3
+        ]
+        intervals = [
+            0.5, 0.5, 0.5, 0.5, 0.5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            1, 1, 1
+        ]
 
         new_wave = wave.Wave(wave_mobs, self.full_path, intervals, now)
         self.waves.append(new_wave)
@@ -72,14 +113,11 @@ class Gameplay(state_machine._State):
             base = map_components.TowerPlace(coord)
             self.tower_places.append(base)
 
-        #self.tower_places[1].set_tower("turret")
-
     def get_event(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
             x, y = pg.mouse.get_pos()
             if self.hud_controller.tower_select_hud.click_on_it(x, y):
                 self.hud_controller.tower_select_hud.get_click_event_pos(x, y)
-            #elif self.hud_controller.tower_details_hud.click_on_it(x, y):
             else:
                 self.hud_controller.close_tower_select_hud()
                 self.hud_controller.close_tower_details_hud()

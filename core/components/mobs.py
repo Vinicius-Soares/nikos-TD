@@ -7,14 +7,14 @@ from ..constants import ENEMY_SPRITES
 
 MINION_ATTRIBUTES = {
     'name':  "minion",
-    'health': 12,
+    'health': 15,
     'speed' : 1,
-    'damage': 1
+    'damage': 2
 }
 
 RUNNER_ATTRIBUTES = {
     'name':  "runner",
-    'health': 10,
+    'health': 12,
     'speed' : 2,
     'damage': 1
 }
@@ -23,7 +23,7 @@ FATMAN_ATTRIBUTES = {
     'name':  "fatman",
     'health': 48,
     'speed' : 0.5,
-    'damage': 2
+    'damage': 4
 }
 
 class _Mob(pg.sprite.Sprite):

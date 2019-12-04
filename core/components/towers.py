@@ -12,7 +12,7 @@ from ..tools import load_image
 
 TURRET_ATTRIBUTES = {
     'name':        "turret",
-    'damage':       2,
+    'damage':       3,
     'fire_range':   125,
     'fire_rate':    1.6,
     'bullet_speed': 6,
@@ -22,20 +22,20 @@ TURRET_ATTRIBUTES = {
 
 BOMBER_ATTRIBUTES = {
     'name':         "bomber",
-    'damage':       6,
+    'damage':       8,
     'fire_range':   250,
-    'fire_rate':    0.6,
+    'fire_rate':    0.4,
     'fire_radius':  56,
-    'bullet_speed': 2,
+    'bullet_speed': 3,
     'cost':         150
 }
 
 
 SNIPER_ATTRIBUTES = {
     'name':         "sniper",
-    'damage':       15,
+    'damage':       12,
     'fire_range':   500,
-    'fire_rate':    1.2,
+    'fire_rate':    0.8,
     'bullet_speed': 18,
     'cost':         350
 }
@@ -174,7 +174,7 @@ class Bomber(_Tower):
     def fire(self):
         new_bullet = Bullet(self.position, self.name, self.target, self.damage, self.bullet_speed)
         self.bullets.append(new_bullet)
-        sc.SoundController().play_turret_shot()
+        sc.SoundController().play_bomber_shot()
 
 
 class Sniper(_Tower):
@@ -183,7 +183,24 @@ class Sniper(_Tower):
         self.__dict__.update(SNIPER_ATTRIBUTES)
 
     def update(self, now, mobs):
-        super().update(now, mobs)
+        if not self.target:
+            mobs_in_range = [mob for mob in mobs if self.is_in_range(mob)]
+            if len(mobs_in_range) > 0: self.search_target(mobs_in_range)
+        else:
+            if now - self.last_bullet_time >= (1 / self.fire_rate) * 1000:
+                self.fire()
+                self.last_bullet_time = now
+
+            if self.target.done or \
+                not self.is_in_range(self.target): self.target = None
+
+        for bullet in self.bullets:
+            if not self.is_in_range(bullet): bullet.done = True
+
+            if not bullet.done: bullet.update()
+            else: self.bullets.remove(bullet)
 
     def fire(self):
-        pass
+        new_bullet = Bullet(self.position, self.name, self.target, self.damage, self.bullet_speed)
+        self.bullets.append(new_bullet)
+        sc.SoundController().play_sniper_shot()
