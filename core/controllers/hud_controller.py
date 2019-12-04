@@ -90,9 +90,9 @@ class TowerHud():
     def create_hud_buttons(self):
         self.tower_images = []
 
-        turret_image = TowerImage(50, 100, "turret", TOWER_SPRITES["turret"].as_posix())
-        bomber_image = TowerImage(200, 100, "bomber", TOWER_SPRITES["bomber"].as_posix())
-        sniper_image = TowerImage(350, 100, "sniper", TOWER_SPRITES["sniper"].as_posix())
+        turret_image = TowerImage(125, 75, "turret", TOWER_SPRITES["turret"].as_posix())
+        bomber_image = TowerImage(275, 75, "bomber", TOWER_SPRITES["bomber"].as_posix())
+        sniper_image = TowerImage(425, 75, "sniper", TOWER_SPRITES["sniper"].as_posix())
 
         self.tower_images.append(turret_image)
         self.tower_images.append(bomber_image)
@@ -101,8 +101,11 @@ class TowerHud():
         self.button = pg.sprite.Sprite()
         self.button.image = pg.transform.scale(load_image(HUD_SPRITES["button"], -1)[0], (192, 192))
         self.button.rect = self.button.image.get_rect()
-        self.button_position = (600, 50)
+        self.button_position = (750, 30)
         self.button.rect.topleft = (self.button_position[0], self.button_position[1] + 64 * 8)
+
+        self.button_text = self.font.render("BUY", 0, (255, 255, 255))
+        self.text_position = (self.button_position[0] + 64, self.button_position[1] + 55)
 
     def reset_background(self):
         self.screen = pg.transform.scale(load_image(HUD_SPRITES["background"], 0)[0], (1024, 64 * 4))
@@ -123,8 +126,8 @@ class TowerHud():
             for tower_image in self.tower_images:
                 if tower_image.click_on_it(x, y):
                     self.selected_tower_name = tower_image.name
-                    pos = (tower_image.rect.topleft[0] - 10, 
-                            tower_image.rect.topleft[1] - 10 - 64 * 8)
+                    pos = (tower_image.rect.topleft[0] - 5, 
+                            tower_image.rect.topleft[1] - 5 - 64 * 8)
                     sizes = (106, 106)
                     self.highlight = pg.Rect(pos, sizes)
 
@@ -142,7 +145,7 @@ class TowerHud():
                 tower_image.draw(self.screen)
 
             self.screen.blit(self.button.image, self.button_position)
-
+            self.screen.blit(self.button_text, self.text_position)
             surface.blit(self.screen, self.screen_rect.topleft)
 
 
