@@ -22,7 +22,7 @@ class Gameplay(state_machine._State):
         self.tower_positions = ((2, 2),(4, 5),(6, 6), (15, 2),(13, 5),(11, 6))
         self.tower_positions = [(x*64-32,y*64-32) for (x,y) in self.tower_positions]
         self.life = 5
-        self.money = 100
+        self.money = 250
 
         self.background = pg.transform.scale(load_image(BACKGROUNDS["gameplay"], -1)[0], MODE)
         self.hud_controller = hc.HudController()
@@ -70,20 +70,6 @@ class Gameplay(state_machine._State):
                             tower_place.selected = True
                         else:
                             self.hud_controller.show_tower_details_hud(tower_place.tower)
-                        '''
-                            Para testes
-                        '''
-                        if not tower_place.tower: 
-                            tower_place.set_tower("turret")
-                        '''
-                        self.hud_controller.get_event(event)
-                        if self.hud_controller.tower_hud.done:
-                            selected_tower = self.hud_controller.tower_hud.selected_tower
-                            tower_name = selected_tower.name
-                            tower_cost = selected_tower.cost
-                            self.hud_controller.selected_tower_place.set_tower(tower_name)
-                            self.money -= tower_cost
-                        '''
 
     def update(self, keys, now):
         if self.life == 0:
@@ -112,6 +98,12 @@ class Gameplay(state_machine._State):
         
         self.hud_controller.match_hud.update(now, self.life, self.money)
         self.hud_controller.tower_select_hud.update(now, self.money)
+
+        if self.hud_controller.tower_select_hud.done:
+            tower_name = self.hud_controller.tower_select_hud.selected_tower_name
+            self.hud_controller.selected_tower_place.set_tower(tower_name)
+            self.money -= self.hud_controller.tower_select_hud.discount
+            self.hud_controller.close_tower_select_hud()
 
     def draw(self, surface):
         surface.blit(self.background, (0, 0))

@@ -9,14 +9,16 @@ from ..constants import TOWER_SPRITES
 from ..controllers import sound_controller as sc
 from ..tools import load_image
 
+
 TURRET_ATTRIBUTES = {
-    'name':       "turret",
-    'damage':      2,
-    'fire_range':  125,
-    'fire_rate':   1.6,
+    'name':        "turret",
+    'damage':       2,
+    'fire_range':   125,
+    'fire_rate':    1.6,
     'bullet_speed': 6,
     'cost': 100
 }
+
 
 BOMBER_ATTRIBUTES = {
     'name':       "bomber",
@@ -27,13 +29,14 @@ BOMBER_ATTRIBUTES = {
     'cost': 150
 }
 
+
 SNIPER_ATTRIBUTES = {
-    'name':      "sniper",
-    'damage':     15,
-    'fire_range': 500,
-    'fire_rate':  1.2,
+    'name':         "sniper",
+    'damage':       15,
+    'fire_range':   500,
+    'fire_rate':    1.2,
     'bullet_speed': 18,
-    'cost': 350
+    'cost':         350
 }
 
 
@@ -42,6 +45,7 @@ class TowerBehavior(enum.Enum):
     FIRST = 2
     STRONG = 3
     WEAK = 4
+
 
 class _Tower(pg.sprite.Sprite):
     def __init__(self, image_path, cors):

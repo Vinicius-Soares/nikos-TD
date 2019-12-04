@@ -2,8 +2,14 @@ import pygame as pg
 import enum
 
 from ..components import ui
-from ..constants import COLORS, FONT_PATH, HUD_SPRITES, WIDTH
+from ..constants import COLORS, FONT_PATH, HUD_SPRITES, WIDTH, TOWER_SPRITES
 from ..tools import load_image
+
+TOWERS_COST = {
+    "turret": 100,
+    "bomber": 150,
+    "sniper": 350
+}
 
 
 class HudController(object):
@@ -76,17 +82,84 @@ class TowerHud():
         self.screen_rect.topleft = (0, 64 * 8)
         self.show = False
         self.done = False
-        self.selected_tower = None
+        self.selected_tower_name = None
+        self.highlight = None
         self.font = pg.font.Font(FONT_PATH.as_posix(), 24)
-        
+        self.create_hud_buttons()
+
+    def create_hud_buttons(self):
+        self.tower_images = []
+
+        turret_image = TowerImage(50, 100, "turret", TOWER_SPRITES["turret"].as_posix())
+        bomber_image = TowerImage(200, 100, "bomber", TOWER_SPRITES["bomber"].as_posix())
+        sniper_image = TowerImage(350, 100, "sniper", TOWER_SPRITES["sniper"].as_posix())
+
+        self.tower_images.append(turret_image)
+        self.tower_images.append(bomber_image)
+        self.tower_images.append(sniper_image)
+
+        self.button = pg.sprite.Sprite()
+        self.button.image = pg.transform.scale(load_image(HUD_SPRITES["button"], -1)[0], (192, 192))
+        self.button.rect = self.button.image.get_rect()
+        self.button_position = (600, 50)
+        self.button.rect.topleft = (self.button_position[0], self.button_position[1] + 64 * 8)
+
+    def reset_background(self):
+        self.screen = pg.transform.scale(load_image(HUD_SPRITES["background"], 0)[0], (1024, 64 * 4))
+
     def click_on_it(self, x, y):
         return self.show and self.screen_rect.collidepoint(x, y)
 
+    def click_on_button(self, x, y):
+        return self.button.rect.collidepoint(x, y)
+
     def get_click_event_pos(self, x, y):
-        print(x, y)
+        if self.click_on_button(x, y):
+            if self.selected_tower_name and \
+                self.money >= TOWERS_COST[self.selected_tower_name]:
+                self.done = True
+                self.discount = TOWERS_COST[self.selected_tower_name]
+        else:
+            for tower_image in self.tower_images:
+                if tower_image.click_on_it(x, y):
+                    self.selected_tower_name = tower_image.name
+                    pos = (tower_image.rect.topleft[0] - 10, 
+                            tower_image.rect.topleft[1] - 10 - 64 * 8)
+                    sizes = (106, 106)
+                    self.highlight = pg.Rect(pos, sizes)
 
     def update(self, now, money):
         self.money = money
 
     def draw(self, surface):
-        if self.show: surface.blit(self.screen, self.screen_rect.topleft)
+        if self.show: 
+            self.reset_background()
+
+            if self.selected_tower_name:
+                pg.draw.rect(self.screen, (0, 0, 255), self.highlight)
+
+            for tower_image in self.tower_images:
+                tower_image.draw(self.screen)
+
+            self.screen.blit(self.button.image, self.button_position)
+
+            surface.blit(self.screen, self.screen_rect.topleft)
+
+
+class TowerImage(pg.sprite.Sprite):
+    def __init__(self, x, y, name, image_path):
+        super().__init__()
+        self.image = pg.transform.scale(load_image(image_path, -1)[0], (96, 96))
+        self.rect = self.image.get_rect()
+        self.position = (x, y)
+        self.rect.topleft = (x, y + 64 * 8)
+        self.name = name
+
+    def click_on_it(self, x, y):
+        return self.rect.collidepoint(x, y)
+
+    def update(self):
+        pass
+
+    def draw(self, surface):
+        surface.blit(self.image, self.position)
