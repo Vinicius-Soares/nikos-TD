@@ -22,7 +22,7 @@ class Gameplay(state_machine._State):
         self.tower_positions = ((2, 2),(4, 5),(6, 6), (15, 2),(13, 5),(11, 6))
         self.tower_positions = [(x*64-32,y*64-32) for (x,y) in self.tower_positions]
         self.life = 5
-        self.money = 250
+        self.money = 1000
 
         self.background = pg.transform.scale(load_image(BACKGROUNDS["gameplay"], -1)[0], MODE)
         self.hud_controller = hc.HudController()

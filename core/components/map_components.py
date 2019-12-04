@@ -25,8 +25,10 @@ class TowerPlace(pg.sprite.Sprite):
     def set_tower(self, tower_name):
         if tower_name == "turret":
             self.tower = towers.Turret(self.rect.center)
-        elif tower_name == "bomber": pass
-        else: pass
+        elif tower_name == "bomber":
+            self.tower = towers.Bomber(self.rect.center)
+        else:
+            self.tower = towers.Sniper(self.rect.center)
 
     def remove_tower(self):
         self.tower = None

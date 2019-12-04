@@ -5,7 +5,7 @@ from ..tools import load_image
 from ..constants import BULLET_SPRITES
 from ..controllers import sound_controller as sc
 
-class Bullet(pg.sprite.Sprite):
+class TurretBullet(pg.sprite.Sprite):
     def __init__(self, position, target, damage, speed):
         super().__init__()
         self.image = pg.transform.scale(load_image(BULLET_SPRITES["turret"], -1)[0], (7, 7))

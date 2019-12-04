@@ -4,7 +4,7 @@ import math
 import pygame as pg
 import random
 
-from .bullet import Bullet
+from .bullets import TurretBullet
 from ..constants import TOWER_SPRITES
 from ..controllers import sound_controller as sc
 from ..tools import load_image
@@ -89,9 +89,7 @@ class _Tower(pg.sprite.Sprite):
             self.target = weaker
 
     def fire(self):
-        new_bullet = Bullet(self.position, self.target, self.damage, self.bullet_speed)
-        self.bullets.append(new_bullet)
-        sc.SoundController().play_turret_shot()
+        pass
 
     def update(self, now, mobs):
         if not self.target:
@@ -110,14 +108,14 @@ class _Tower(pg.sprite.Sprite):
                 bullet.done = True
 
             if not bullet.done: bullet.update()
-            else:
-                self.bullets.remove(bullet)
+            else: self.bullets.remove(bullet)
 
     def draw(self, surface):
         surface.blit(self.image, self.rect.topleft)
 
         for bullet in self.bullets:
             bullet.draw(surface)
+
 
 class Turret(_Tower):
     def __init__(self, cors):
@@ -127,8 +125,10 @@ class Turret(_Tower):
     def update(self, now, mobs):
         super().update(now, mobs)
 
-    def draw(self, surface):
-        super().draw(surface)
+    def fire(self):
+        new_bullet = TurretBullet(self.position, self.target, self.damage, self.bullet_speed)
+        self.bullets.append(new_bullet)
+        sc.SoundController().play_turret_shot()
 
 
 class Bomber(_Tower):
@@ -136,8 +136,8 @@ class Bomber(_Tower):
         super().__init__(TOWER_SPRITES["bomber"], cors)
         self.__dict__.update(BOMBER_ATTRIBUTES)
 
-    def update(self):
-        pass
+    def update(self, now, mobs):
+        super().update(now, mobs)
 
     def fire(self):
         pass
@@ -148,8 +148,8 @@ class Sniper(_Tower):
         super().__init__(TOWER_SPRITES["sniper"], cors)
         self.__dict__.update(SNIPER_ATTRIBUTES)
 
-    def update(self):
-        pass
+    def update(self, now, mobs):
+        super().update(now, mobs)
 
     def fire(self):
         pass
