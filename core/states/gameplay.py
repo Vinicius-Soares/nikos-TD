@@ -19,7 +19,9 @@ class Gameplay(state_machine._State):
                           (15, 4), (15, 3), (14, 3), (13, 3), (12, 3), (11, 3), (10, 3), (10, 2))
         self.full_path = [(x*64-32,y*64-32) for (x,y) in self.full_path]
 
-        self.tower_positions = ((2, 2),(4, 5),(6, 6), (15, 2),(13, 5),(11, 6))
+        self.tower_positions = ((2, 2),(3,2),(4,2),(4, 5),(3,5),(3,6),(4,6),(6, 6), (15, 2),(14,2),
+                                (13,2),(13, 5),(14,5),(13,6),(14,6),(11, 6),(11,7),(10,6),(9,6),(8,6),
+                                (7,6),(6,7))
         self.tower_positions = [(x*64-32,y*64-32) for (x,y) in self.tower_positions]
         self.life = 5
         self.money = 1000
